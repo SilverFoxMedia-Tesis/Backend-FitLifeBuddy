@@ -16,11 +16,15 @@ import java.io.Serializable;
 public class User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer idUser;
+    private Long idUser;
     @Column(name = "Fullname", nullable = false, length = 50)
     private String fullname;
     @Column(name = "Lastname", nullable = false, length = 50)
     private String lastname;
+    @Column(name = "EmailAddress", nullable = false, length = 100)
+    private String emailAddress;
+    @Column(name = "Password", nullable = false, length = 50)
+    private String password;
     @Column(name = "Created", nullable = true)
     private String created;
     @Column(name = "Updated", nullable = true)
@@ -28,8 +32,4 @@ public class User implements Serializable {
     @Column(name = "Deleted", nullable = true)
     private String deleted;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idAuth", nullable = false)
-    @JsonIgnoreProperties({"hibernateLazyInitializer","handler"})
-    private Auth auth;
 }

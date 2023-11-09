@@ -19,7 +19,7 @@ import java.util.Set;
 public class Pacient implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer idPacient;
+    private Long idPacient;
     @Column(name = "Height",nullable = false)
     private Float height;
     @Column(name = "Weight",nullable = false)
@@ -30,8 +30,15 @@ public class Pacient implements Serializable {
     @Temporal(TemporalType.DATE)
     private Date birthDate;
 
-    @OneToMany(mappedBy = "pacient", fetch = FetchType.LAZY)
-    private Set<PacientHistory> pacientHistories = new HashSet<>();
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "idPacientHistory",nullable = false)
+    @JsonIgnoreProperties({"hibernateLazyInitializer","handler"})
+    private PacientHistory pacientHistory;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "idPlan",nullable = false)
+    @JsonIgnoreProperties({"hibernateLazyInitializer","handler"})
+    private Plan plan;
 
     @OneToMany(mappedBy = "pacient", fetch = FetchType.LAZY)
     private Set<FoodCondition> foodConditions = new HashSet<>();

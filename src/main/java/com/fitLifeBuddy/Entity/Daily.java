@@ -19,7 +19,7 @@ import java.util.Set;
 public class Daily implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer idDaily;
+    private Long idDaily;
     @Column(name = "Date", nullable = false)
     @Temporal(TemporalType.DATE)
     private Date date;

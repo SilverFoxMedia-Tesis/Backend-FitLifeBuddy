@@ -16,9 +16,7 @@ import java.io.Serializable;
 public class PacientHistory implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer idPacientHistory;
-    @Column(name = "LatestWeight",nullable = false)
-    private Float latestWeight;
+    private Long idPacientHistory;
     @Column(name = "SCC",nullable = false)
     private String scc;
     @Column(name = "FAF",nullable = false)
@@ -40,14 +38,10 @@ public class PacientHistory implements Serializable {
     @Column(name = "CALC",nullable = false)
     private String calc;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "idPacient",nullable = false)
     @JsonIgnoreProperties({"hibernateLazyInitializer","handler"})
     private Pacient pacient;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idPlan",nullable = false)
-    @JsonIgnoreProperties({"hibernateLazyInitializer","handler"})
-    private Plan plan;
 
 }

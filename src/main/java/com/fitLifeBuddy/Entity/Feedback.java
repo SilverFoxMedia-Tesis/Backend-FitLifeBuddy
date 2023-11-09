@@ -18,7 +18,7 @@ import java.util.Set;
 public class Feedback implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer idFeedback;
+    private Long idFeedback;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "idPlan", nullable = true)

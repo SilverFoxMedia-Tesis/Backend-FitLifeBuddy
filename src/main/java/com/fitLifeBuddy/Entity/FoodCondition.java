@@ -17,7 +17,7 @@ import java.io.Serializable;
 public class FoodCondition implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer idFoodCondition;
+    private Long idFoodCondition;
     @Column(name = "NameFoodCondition", nullable = false,length = 20)
     private String nameFoodCondition;
     @Column(name = "DescriptionFoodCondition", nullable = false,length = 50)

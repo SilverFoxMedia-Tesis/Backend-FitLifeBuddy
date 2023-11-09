@@ -16,7 +16,7 @@ import java.io.Serializable;
 public class HealthCondition implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer idHealthCondition;
+    private Long idHealthCondition;
     @Column(name = "NameHealthCondition", nullable = false,length = 20)
     private String nameHealthCondition;
     @Column(name = "DescriptionHealthCondition", nullable = false,length = 50)

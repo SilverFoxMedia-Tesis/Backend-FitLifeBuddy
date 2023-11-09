@@ -18,7 +18,7 @@ import java.util.Set;
 public class Nutritionist implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer idNutritionist;
+    private Long idNutritionist;
 
     @OneToMany(mappedBy = "nutritionist", fetch = FetchType.LAZY)
     private Set<Pacient> pacients = new HashSet<>();

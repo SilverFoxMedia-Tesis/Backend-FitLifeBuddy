@@ -17,7 +17,7 @@ import java.io.Serializable;
 public class Plan implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer idPlan;
+    private Long idPlan;
     @Enumerated(EnumType.STRING)
     @Column(name = "Frecuently", nullable = false, length = 20)
     private Frecuently frecuently;
@@ -25,9 +25,10 @@ public class Plan implements Serializable {
     @Column(name = "DietType", nullable = false, length = 20)
     private DietType dietType;
 
+
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idPacientHistory",nullable = false)
+    @JoinColumn(name = "idPacient",nullable = false)
     @JsonIgnoreProperties({"hibernateLazyInitializer","handler"})
-    private PacientHistory pacientHistory;
+    private Pacient pacient;
 
 }

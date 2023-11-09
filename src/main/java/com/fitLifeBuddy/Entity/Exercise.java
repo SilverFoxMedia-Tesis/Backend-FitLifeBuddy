@@ -19,7 +19,7 @@ import java.io.Serializable;
 public class Exercise implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer idExercise;
+    private Long idExercise;
     @Column(name = "Title", nullable = false, length = 20)
     private String title;
     @Column(name = "DescriptionExercise", nullable = false, length = 50)

@@ -18,7 +18,7 @@ import java.util.Set;
 public class Meal implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer idMeal;
+    private Long idMeal;
     @Column(name = "NameMeal", nullable = false, length = 20)
     private String nameMeal;
     @Column(name = "DescriptionMeal", nullable = false, length = 100)

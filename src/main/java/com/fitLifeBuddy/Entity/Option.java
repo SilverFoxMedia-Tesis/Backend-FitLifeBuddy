@@ -14,7 +14,7 @@ import java.io.Serializable;
 public class Option implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer idOption;
+    private Long idOption;
     @Column(name = "NameOption", nullable = false, length = 20)
     private String nameOption;
 
