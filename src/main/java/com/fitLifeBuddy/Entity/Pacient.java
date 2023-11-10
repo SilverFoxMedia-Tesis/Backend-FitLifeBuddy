@@ -31,12 +31,12 @@ public class Pacient implements Serializable {
     private Date birthDate;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idPacientHistory",nullable = false)
+    @JoinColumn(name = "idPacientHistory",nullable = true)
     @JsonIgnoreProperties({"hibernateLazyInitializer","handler"})
     private PacientHistory pacientHistory;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idPlan",nullable = false)
+    @JoinColumn(name = "idPlan",nullable = true)
     @JsonIgnoreProperties({"hibernateLazyInitializer","handler"})
     private Plan plan;
 
@@ -52,7 +52,7 @@ public class Pacient implements Serializable {
     private Nutritionist nutritionist;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idUser", nullable = false)
+    @JoinColumn(name = "idPerson", nullable = false)
     @JsonIgnoreProperties({"hibernateLazyInitializer","handler"})
-    private User user;
+    private Person person;
 }

@@ -24,7 +24,7 @@ public class Nutritionist implements Serializable {
     private Set<Pacient> pacients = new HashSet<>();
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idUser", nullable = false)
+    @JoinColumn(name = "idPerson", nullable = false)
     @JsonIgnoreProperties({"hibernateLazyInitializer","handler"})
-    private User user;
+    private Person person;
 }
