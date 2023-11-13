@@ -1,7 +1,9 @@
 package com.fitLifeBuddy.Controller;
 
 import com.fitLifeBuddy.Entity.*;
+import com.fitLifeBuddy.Service.INutritionistService;
 import com.fitLifeBuddy.Service.IPacientService;
+import com.fitLifeBuddy.Service.IPersonService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @CrossOrigin
@@ -24,6 +27,12 @@ import java.util.Optional;
 public class PacientController {
     @Autowired
     private IPacientService pacientService;
+
+    @Autowired
+    private IPersonService personService;
+
+    @Autowired
+    private INutritionistService nutritionistService;
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Listar Pacients", notes = "Metodo para listar a todos los Pacients")
@@ -43,16 +52,23 @@ public class PacientController {
         }
     }
 
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/{idPerson}/{idNutritionist}",consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Registro de Pacients", notes = "Método que registra Pacients en BD")
     @ApiResponses({
             @ApiResponse(code = 201, message = "Pacient creado"),
             @ApiResponse(code = 404, message = "Pacient no creado")
     })
-    public ResponseEntity<Pacient> insertPacient(@Valid @RequestBody Pacient pacient) {
+    public ResponseEntity<Pacient> insertPacient(@PathVariable("idPerson") Long idPerson, @PathVariable("idNutritionist") Long idNutritionist, @Valid @RequestBody Pacient pacient ) {
         try {
-            Pacient pacientNew = pacientService.save(pacient);
-            return ResponseEntity.status(HttpStatus.CREATED).body(pacientNew);
+            Optional<Person> person = personService.getById(idPerson);
+            Optional<Nutritionist> nutritionist = nutritionistService.getById(idNutritionist);
+            if (person.isPresent() && nutritionist.isPresent()) {
+                pacient.setPerson(person.get());
+                pacient.setNutritionist(nutritionist.get());
+                Pacient pacientNew = pacientService.save(pacient);
+                return ResponseEntity.status(HttpStatus.CREATED).body(pacientNew);
+            } else
+                return new ResponseEntity<Pacient>(HttpStatus.FAILED_DEPENDENCY);
         } catch (Exception e) {
             return new ResponseEntity<Pacient>(HttpStatus.INTERNAL_SERVER_ERROR);
 
@@ -65,8 +81,7 @@ public class PacientController {
             @ApiResponse(code = 200, message = "Datos de Pacient actualizados"),
             @ApiResponse(code = 404, message = "Pacient no encontrado")
     })
-    public ResponseEntity<Pacient> updatePacient(
-            @PathVariable("id") Long id, @Valid @RequestBody Pacient pacient) {
+    public ResponseEntity<Pacient> updatePacient(@PathVariable("id") Long id, @Valid @RequestBody Pacient pacient) {
         try {
             Optional<Pacient> pacientUp = pacientService.getById(id);
             if (!pacientUp.isPresent())

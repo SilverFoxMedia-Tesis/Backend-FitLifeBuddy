@@ -1,5 +1,6 @@
 package com.fitLifeBuddy.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -20,6 +21,7 @@ public class Nutritionist implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idNutritionist;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "nutritionist", fetch = FetchType.LAZY)
     private Set<Pacient> pacients = new HashSet<>();
 

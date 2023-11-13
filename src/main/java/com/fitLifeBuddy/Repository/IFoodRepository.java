@@ -17,7 +17,7 @@ public interface IFoodRepository extends JpaRepository<Food,Long> {
     public List<Food> findByCategoryName(String categoryName);
     public List<Food> findByFoodOrigin(FoodOrigin foodOrigin);
     public List<Food> findByDietType(DietType dietType);
-    @Query("select f.meals from Food f where f.idFood = : idFood")
-    public List<Meal> findMealsByIdFood(@Param("idFood")Long idFood);
+    @Query("select f.meals from Food f where f.idFood = : foodId")
+    public List<Meal> findMealsByIdFood(@Param("foodId")Long idFood);
 
 }

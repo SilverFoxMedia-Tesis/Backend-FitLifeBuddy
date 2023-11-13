@@ -1,5 +1,6 @@
 package com.fitLifeBuddy.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -21,15 +22,11 @@ public class Feedback implements Serializable {
     private Long idFeedback;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idPlan", nullable = true)
-    @JsonIgnoreProperties({"hibernateLazyInitializer","handler"})
-    private Plan plan;
-
-    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "idDaily", nullable = true)
     @JsonIgnoreProperties({"hibernateLazyInitializer","handler"})
     private Daily daily;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "feedback", fetch = FetchType.LAZY)
     private Set<Question> questions = new HashSet<>();
 }

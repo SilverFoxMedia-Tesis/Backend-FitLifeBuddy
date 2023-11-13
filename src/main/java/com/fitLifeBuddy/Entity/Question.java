@@ -1,5 +1,6 @@
 package com.fitLifeBuddy.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -27,6 +28,7 @@ public class Question implements Serializable {
     @JsonIgnoreProperties({"hibernateLazyInitializer","handler"})
     private Feedback feedback;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "question", fetch = FetchType.LAZY)
     private Set<Option> options = new HashSet<>();
 }

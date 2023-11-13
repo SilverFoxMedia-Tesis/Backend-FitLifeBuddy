@@ -1,5 +1,6 @@
 package com.fitLifeBuddy.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -40,9 +41,11 @@ public class Pacient implements Serializable {
     @JsonIgnoreProperties({"hibernateLazyInitializer","handler"})
     private Plan plan;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "pacient", fetch = FetchType.LAZY)
     private Set<FoodCondition> foodConditions = new HashSet<>();
 
+    @JsonIgnore
     @OneToMany(mappedBy = "pacient", fetch = FetchType.LAZY)
     private Set<HealthCondition> healthConditions = new HashSet<>();
 

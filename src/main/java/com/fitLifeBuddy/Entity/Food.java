@@ -1,5 +1,6 @@
 package com.fitLifeBuddy.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fitLifeBuddy.Entity.Enum.DietType;
 import com.fitLifeBuddy.Entity.Enum.FoodOrigin;
 import lombok.AllArgsConstructor;
@@ -40,6 +41,7 @@ public class Food implements Serializable {
     @Column(name = "DietType", nullable = false, length = 15)
     private DietType dietType;
 
+    @JsonIgnore
     @ManyToMany(mappedBy = "foods")
     private Set<Meal> meals = new HashSet<>();
 

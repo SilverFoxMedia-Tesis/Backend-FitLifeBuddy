@@ -1,5 +1,6 @@
 package com.fitLifeBuddy.Service.impl;
 
+import com.fitLifeBuddy.Entity.Daily;
 import com.fitLifeBuddy.Entity.Enum.DietType;
 import com.fitLifeBuddy.Entity.Enum.Frecuently;
 import com.fitLifeBuddy.Entity.Plan;
@@ -39,6 +40,10 @@ public class PlanServiceImpl implements IPlanService {
     @Override
     public Optional<Plan> getById(Long id) throws Exception {
         return planRepository.findById(id);
+    }
+    @Override
+    public List<Daily> findDailiesByIdPlan(Long idPlan) throws Exception {
+        return planRepository.findDailiesByIdPlan(idPlan);
     }
 
     @Override

@@ -2,7 +2,9 @@ package com.fitLifeBuddy.Controller;
 
 import com.fitLifeBuddy.Entity.Nutritionist;
 import com.fitLifeBuddy.Entity.Pacient;
+import com.fitLifeBuddy.Entity.Person;
 import com.fitLifeBuddy.Service.INutritionistService;
+import com.fitLifeBuddy.Service.IPersonService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -25,6 +27,9 @@ public class NutritionistController {
 
     @Autowired
     private INutritionistService nutritionistService;
+
+    @Autowired
+    private IPersonService personService;
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Listar Nutritionists",notes = "Métodos para listar a todos los nutritionists")
@@ -85,16 +90,22 @@ public class NutritionistController {
     }
 
 
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "{idPerson}",consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Registro de Nutritionist", notes = "Método que registra Nutritionists en BD")
     @ApiResponses({
             @ApiResponse(code = 201, message = "Nutritionist creado"),
             @ApiResponse(code = 404, message = "Nutritionist no creado")
     })
-    public ResponseEntity<Nutritionist> insertNutritionist(@Valid @RequestBody Nutritionist nutritionist) {
+    public ResponseEntity<Nutritionist> insertNutritionist(@PathVariable("idPerson") Long idPerson,@Valid @RequestBody Nutritionist nutritionist) {
         try {
-            Nutritionist nutritionistNew = nutritionistService.save(nutritionist);
-            return ResponseEntity.status(HttpStatus.CREATED).body(nutritionistNew);
+            Optional<Person> person = personService.getById(idPerson);
+            if (person.isPresent()){
+                nutritionist.setPerson(person.get());
+                Nutritionist nutritionistNew = nutritionistService.save(nutritionist);
+                return ResponseEntity.status(HttpStatus.CREATED).body(nutritionistNew);
+            }else
+                return new ResponseEntity<Nutritionist>(HttpStatus.FAILED_DEPENDENCY);
+
         } catch (Exception e) {
             return new ResponseEntity<Nutritionist>(HttpStatus.INTERNAL_SERVER_ERROR);
 

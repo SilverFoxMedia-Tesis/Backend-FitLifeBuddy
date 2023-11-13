@@ -1,6 +1,6 @@
 package com.fitLifeBuddy.Entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fitLifeBuddy.Entity.Enum.BodyPart;
 import com.fitLifeBuddy.Entity.Enum.Equipment;
 import com.fitLifeBuddy.Entity.Enum.Level;
@@ -11,6 +11,9 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
+
 @Entity
 @Table(name = "exercise")
 @Data
@@ -41,8 +44,7 @@ public class Exercise implements Serializable {
     @Column(name = "RatingDesc",  nullable = true)
     private Float ratingDesc;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idDaily", nullable = false)
-    @JsonIgnoreProperties({"hibernateLazyInitializer","handler"})
-    private Daily daily;
+    @JsonIgnore
+    @ManyToMany(mappedBy = "exercises")
+    private Set<Routine> routines = new HashSet<>();
 }

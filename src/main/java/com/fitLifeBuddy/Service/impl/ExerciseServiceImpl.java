@@ -5,6 +5,7 @@ import com.fitLifeBuddy.Entity.Enum.Equipment;
 import com.fitLifeBuddy.Entity.Enum.Level;
 import com.fitLifeBuddy.Entity.Enum.TypeExercise;
 import com.fitLifeBuddy.Entity.Exercise;
+import com.fitLifeBuddy.Entity.Routine;
 import com.fitLifeBuddy.Repository.IExerciseRepository;
 import com.fitLifeBuddy.Service.IExerciseService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,5 +67,10 @@ public class ExerciseServiceImpl implements IExerciseService {
     @Override
     public List<Exercise> findByLevel(Level level) throws Exception {
         return exerciseRepository.findByLevel(level);
+    }
+
+    @Override
+    public List<Routine> findRoutinesByIdExercise(Long idExercise) throws Exception {
+        return exerciseRepository.findRoutinesByIdExercise(idExercise);
     }
 }

@@ -1,5 +1,6 @@
 package com.fitLifeBuddy.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -26,11 +27,13 @@ public class Daily implements Serializable {
     @Column(name = "DateNumber", nullable = false)
     private Integer dateNumber;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "daily", fetch = FetchType.LAZY)
     private Set<Meal> meals = new HashSet<>();
 
+    @JsonIgnore
     @OneToMany(mappedBy = "daily",fetch = FetchType.LAZY)
-    private Set<Exercise> exercises = new HashSet<>();
+    private Set<Routine> routines = new HashSet<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "idPlan", nullable = false)

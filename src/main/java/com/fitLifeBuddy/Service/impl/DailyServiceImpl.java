@@ -3,6 +3,7 @@ package com.fitLifeBuddy.Service.impl;
 import com.fitLifeBuddy.Entity.Daily;
 import com.fitLifeBuddy.Entity.Exercise;
 import com.fitLifeBuddy.Entity.Meal;
+import com.fitLifeBuddy.Entity.Routine;
 import com.fitLifeBuddy.Repository.IDailyRepository;
 import com.fitLifeBuddy.Service.IDailyService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,7 +53,7 @@ public class DailyServiceImpl implements IDailyService {
     }
 
     @Override
-    public List<Exercise> findExercisesByIdDaily(Long idDaily) throws Exception {
-        return dailyRepository.findExercisesByIdDaily(idDaily);
+    public List<Routine> findRoutinesByIdDaily(Long idDaily) throws Exception {
+        return dailyRepository.findRoutinesByIdDaily(idDaily);
     }
 }
