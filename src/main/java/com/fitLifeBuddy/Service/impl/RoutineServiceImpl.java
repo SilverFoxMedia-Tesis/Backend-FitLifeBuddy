@@ -1,7 +1,7 @@
 package com.fitLifeBuddy.Service.impl;
 
-import com.fitLifeBuddy.Entity.Exercise;
 import com.fitLifeBuddy.Entity.Routine;
+import com.fitLifeBuddy.Entity.RoutineExercise;
 import com.fitLifeBuddy.Repository.IRoutineRepository;
 import com.fitLifeBuddy.Service.IRoutineService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +40,7 @@ public class RoutineServiceImpl implements IRoutineService {
     }
 
     @Override
-    public List<Exercise> findFoodsByIdRoutine(Long idRoutine) throws Exception {
-        return routineRepository.findFoodsByIdRoutine(idRoutine);
+    public List<RoutineExercise> findRoutineExercisesByIdRoutine(Long idRoutine) throws Exception {
+        return routineRepository.findRoutineExercisesByIdRoutine(idRoutine);
     }
 }

@@ -1,5 +1,6 @@
 package com.fitLifeBuddy.Entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -24,7 +25,5 @@ public class Person implements Serializable {
     private String emailAddress;
     @Column(name = "Password", nullable = false, length = 50)
     private String password;
-
-
 
 }

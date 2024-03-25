@@ -1,12 +1,9 @@
 package com.fitLifeBuddy.Controller;
 
 import com.fitLifeBuddy.Entity.Enum.BodyPart;
-import com.fitLifeBuddy.Entity.Enum.Equipment;
-import com.fitLifeBuddy.Entity.Enum.Level;
 import com.fitLifeBuddy.Entity.Enum.TypeExercise;
 import com.fitLifeBuddy.Entity.Exercise;
-import com.fitLifeBuddy.Entity.Food;
-import com.fitLifeBuddy.Entity.Routine;
+import com.fitLifeBuddy.Entity.RoutineExercise;
 import com.fitLifeBuddy.Service.IExerciseService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -182,62 +179,23 @@ public class ExerciseController {
         }
     }
 
-    @GetMapping("searchByEquipment/{equipment}")
-    @ApiOperation(value = "Buscar Exercise por equipment", notes = "Métodos para encontrar un Exercise por su respectivo equipment")
+
+    @GetMapping("searchRoutineExercisesByIdExercise/{idExercise}")
+    @ApiOperation(value = "Buscar RoutineExercise por Exercise", notes = "Métodos para encontrar un RoutineExercise por su respectivo Exercise")
     @ApiResponses({
-            @ApiResponse(code = 201, message = "Exercise encontrados"),
-            @ApiResponse(code = 404, message = "Exercise no encontrados")
+            @ApiResponse(code = 201, message = "RoutineExercise encontrados"),
+            @ApiResponse(code = 404, message = "RoutineExercise no encontrados")
     })
-    public ResponseEntity<List<Exercise>> findByEquipment(@PathVariable("equipment") Equipment equipment) {
+    public ResponseEntity<List<RoutineExercise>> findRoutineExercisesByIdExercise(@PathVariable("idExercise") Long idExercise) {
         try {
-            List<Exercise> exercises = exerciseService.findByEquipment(equipment);
-            if (exercises.size() > 0)
-                return new ResponseEntity<List<Exercise>>(exercises, HttpStatus.OK);
+            List<RoutineExercise> routineExercises = exerciseService.findRoutineExercisesByIdExercise(idExercise);
+            if (routineExercises.size() > 0)
+                return new ResponseEntity<List<RoutineExercise>>(routineExercises, HttpStatus.OK);
             else
-                return new ResponseEntity<List<Exercise>>(HttpStatus.NOT_FOUND);
+                return new ResponseEntity<List<RoutineExercise>>(HttpStatus.NOT_FOUND);
 
         } catch (Exception e) {
-            return new ResponseEntity<List<Exercise>>(HttpStatus.INTERNAL_SERVER_ERROR);
-
-        }
-    }
-
-    @GetMapping("searchByLevel/{level}")
-    @ApiOperation(value = "Buscar Exercise por level", notes = "Métodos para encontrar un Exercise por su respectivo level")
-    @ApiResponses({
-            @ApiResponse(code = 201, message = "Exercise encontrados"),
-            @ApiResponse(code = 404, message = "Exercise no encontrados")
-    })
-    public ResponseEntity<List<Exercise>> findByLevel(@PathVariable("level") Level level) {
-        try {
-            List<Exercise> exercises = exerciseService.findByLevel(level);
-            if (exercises.size() > 0)
-                return new ResponseEntity<List<Exercise>>(exercises, HttpStatus.OK);
-            else
-                return new ResponseEntity<List<Exercise>>(HttpStatus.NOT_FOUND);
-
-        } catch (Exception e) {
-            return new ResponseEntity<List<Exercise>>(HttpStatus.INTERNAL_SERVER_ERROR);
-
-        }
-    }
-
-    @GetMapping("searchRoutinesByIdExercise/{idExercise}")
-    @ApiOperation(value = "Buscar Routine por Exercise", notes = "Métodos para encontrar un Routine por su respectivo Exercise")
-    @ApiResponses({
-            @ApiResponse(code = 201, message = "Routines encontrados"),
-            @ApiResponse(code = 404, message = "Routines no encontrados")
-    })
-    public ResponseEntity<List<Routine>> findRoutinesByIdExercise(@PathVariable("idExercise") Long idExercise) {
-        try {
-            List<Routine> routines = exerciseService.findRoutinesByIdExercise(idExercise);
-            if (routines.size() > 0)
-                return new ResponseEntity<List<Routine>>(routines, HttpStatus.OK);
-            else
-                return new ResponseEntity<List<Routine>>(HttpStatus.NOT_FOUND);
-
-        } catch (Exception e) {
-            return new ResponseEntity<List<Routine>>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<List<RoutineExercise>>(HttpStatus.INTERNAL_SERVER_ERROR);
 
         }
     }

@@ -1,7 +1,6 @@
 package com.fitLifeBuddy.Service.impl;
 
 import com.fitLifeBuddy.Entity.Daily;
-import com.fitLifeBuddy.Entity.Enum.DietType;
 import com.fitLifeBuddy.Entity.Enum.Frecuently;
 import com.fitLifeBuddy.Entity.Plan;
 import com.fitLifeBuddy.Repository.IPlanRepository;

@@ -13,6 +13,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.validation.Valid;
 import java.util.Date;
@@ -25,6 +27,9 @@ import java.util.Optional;
 @RequestMapping("/api/pacients")
 @Api(tags = "Pacient", value = "Service Web RESTFul de Pacients")
 public class PacientController {
+
+    private static final Logger logger = LoggerFactory.getLogger(PacientController.class);
+
     @Autowired
     private IPacientService pacientService;
 
@@ -122,15 +127,18 @@ public class PacientController {
     })
     public ResponseEntity<PacientHistory> findPacientHistoryByIdPacient(@PathVariable("idPacient") Long idPacient) {
         try {
+            logger.debug("Iniciando búsqueda de PacientHistory para Pacient ID: {}", idPacient);
             PacientHistory pacientHistory = pacientService.findPacientHistoryByIdPacient(idPacient);
-            if (pacientHistory == null)
-                return new ResponseEntity<PacientHistory>(HttpStatus.NOT_FOUND);
-            else
-                return new ResponseEntity<PacientHistory>(HttpStatus.OK);
-
+            if (pacientHistory == null) {
+                logger.warn("No se encontró PacientHistory para Pacient ID: {}", idPacient);
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            } else {
+                logger.debug("PacientHistory encontrado para Pacient ID: {}", idPacient);
+                return new ResponseEntity<>(pacientHistory, HttpStatus.OK);
+            }
         } catch (Exception e) {
-            return new ResponseEntity<PacientHistory>(HttpStatus.INTERNAL_SERVER_ERROR);
-
+            logger.error("Error al buscar PacientHistory para Pacient ID: " + idPacient, e);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -140,18 +148,21 @@ public class PacientController {
             @ApiResponse(code = 201, message = "Plan encontrados"),
             @ApiResponse(code = 404, message = "Plan no encontrados")
     })
-    public ResponseEntity<Plan> findPlanByIdPacient(@PathVariable("idPacient") Long idPacient) {
+    public ResponseEntity<List<Plan>> findPlanByIdPacient(@PathVariable("idPacient") Long idPacient) {
         try {
-            Plan plan = pacientService.findPlanByIdPacient(idPacient);
-            if (plan == null)
-                return new ResponseEntity<Plan>(HttpStatus.NOT_FOUND);
+            List<Plan> plans = pacientService.findPlanByIdPacient(idPacient);
+            if (plans.size() > 0)
+                return new ResponseEntity<List<Plan>>(plans, HttpStatus.OK);
             else
-                return new ResponseEntity<Plan>(HttpStatus.OK);
+                return new ResponseEntity<List<Plan>>(HttpStatus.NOT_FOUND);
 
         } catch (Exception e) {
-            return new ResponseEntity<Plan>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<List<Plan>>(HttpStatus.INTERNAL_SERVER_ERROR);
 
         }
+
+
+
     }
 
     @GetMapping("searchByBirthDate/{birthDate}")
@@ -160,7 +171,7 @@ public class PacientController {
             @ApiResponse(code = 201, message = "Pacients encontrados"),
             @ApiResponse(code = 404, message = "Pacients no encontrados")
     })
-    public ResponseEntity<List<Pacient>> findByFullname(@PathVariable("birthDate") Date birthDate) {
+    public ResponseEntity<List<Pacient>> find(@PathVariable("birthDate") Date birthDate) {
         try {
             List<Pacient> pacients = pacientService.find(birthDate);
             if (pacients.size() > 0)

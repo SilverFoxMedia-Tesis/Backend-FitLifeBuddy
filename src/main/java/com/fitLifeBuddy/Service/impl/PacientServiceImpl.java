@@ -45,7 +45,7 @@ public class PacientServiceImpl implements IPacientService {
     }
 
     @Override
-    public Plan findPlanByIdPacient(Long idPacient) throws Exception {
+    public List<Plan> findPlanByIdPacient(Long idPacient) throws Exception {
         return pacientRepository.findPlanByIdPacient(idPacient);
     }
 

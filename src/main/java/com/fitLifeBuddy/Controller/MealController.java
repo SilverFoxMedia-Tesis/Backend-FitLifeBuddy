@@ -8,6 +8,8 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -15,16 +17,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @CrossOrigin
 @RestController
 @RequestMapping("/api/meals")
 @Api(tags = "Meal", value = "Service Web RESTFul de Meals")
 public class MealController {
+    private static final Logger logger = LoggerFactory.getLogger(PacientController.class);
 
     @Autowired
     private IMealService mealService;
@@ -96,32 +97,18 @@ public class MealController {
     @ApiOperation(value = "Registro de Meal", notes = "Método que registra Meal en BD")
     @ApiResponses({
             @ApiResponse(code = 201, message = "Meal creado"),
-            @ApiResponse(code = 404, message = "Meal no creado")
+            @ApiResponse(code = 400, message = "Información inválida o incompleta para crear el Meal")
     })
-    public ResponseEntity<Meal> insertMeal(@PathVariable("idDaily") Long idDaily, @RequestParam List<Long> idFoods, @Valid @RequestBody Meal meal) {
+    public ResponseEntity<Meal> insertMeal(@Valid @RequestBody Meal meal) {
         try {
-            Optional<Daily> daily = dailyService.getById(idDaily);
+            Meal mealNew = mealService.save(meal);
+            return ResponseEntity.status(HttpStatus.CREATED).body(mealNew);
 
-            if (daily.isPresent()) {
-                meal.setDaily(daily.get());
-
-                Set<Food> foods = new HashSet<>();
-                for (Long idFood : idFoods) {
-                    Optional<Food> food = foodService.getById(idFood);
-                    food.ifPresent(foods::add);
-                }
-
-                meal.setFoods(foods);
-
-                Meal mealNew = mealService.save(meal);
-                return ResponseEntity.status(HttpStatus.CREATED).body(mealNew);
-            } else {
-                return new ResponseEntity<>(HttpStatus.FAILED_DEPENDENCY);
-            }
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<Meal>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
 
     @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Eliminación de Meal", notes = "Metodo que elimina los datos de Meal")
@@ -147,7 +134,7 @@ public class MealController {
             @ApiResponse(code = 201, message = "Meals encontrados"),
             @ApiResponse(code = 404, message = "Meals no encontrados")
     })
-    public ResponseEntity<List<Meal>> findByNameMeal(@PathVariable("idMeal") String nameMeal) {
+    public ResponseEntity<List<Meal>> findByNameMeal(@PathVariable("nameMeal") String nameMeal) {
         try {
             List<Meal> meals = mealService.findByNameMeal(nameMeal);
             if (meals.size() > 0)
@@ -160,22 +147,22 @@ public class MealController {
 
         }
     }
-    @GetMapping("searchFoodsByIdMeal/{idMeal}")
-    @ApiOperation(value = "Buscar Foods por Meal", notes = "Métodos para encontrar Foods por su respectivo Meal")
+    @GetMapping("searchMealFoodsByIdMeal/{idMeal}")
+    @ApiOperation(value = "Buscar MealFoods por Meal", notes = "Métodos para encontrar MealFoods por su respectivo Meal")
     @ApiResponses({
-            @ApiResponse(code = 201, message = "Foods encontrados"),
-            @ApiResponse(code = 404, message = "Foods no encontrados")
+            @ApiResponse(code = 201, message = "MealFoods encontrados"),
+            @ApiResponse(code = 404, message = "MealFoods no encontrados")
     })
-    public ResponseEntity<List<Food>> findFoodsByIdMeal(@PathVariable("idMeal") Long idMeal) {
+    public ResponseEntity<List<MealFood>> findMealFoodsByIdMeal(@PathVariable("idMeal") Long idMeal) {
         try {
-            List<Food> foods = mealService.findFoodsByIdMeal(idMeal);
-            if (foods.size() > 0)
-                return new ResponseEntity<List<Food>>(foods, HttpStatus.OK);
+            List<MealFood> mealFoods = mealService.findMealFoodsByIdMeal(idMeal);
+            if (mealFoods.size() > 0)
+                return new ResponseEntity<List<MealFood>>(mealFoods, HttpStatus.OK);
             else
-                return new ResponseEntity<List<Food>>(HttpStatus.NOT_FOUND);
+                return new ResponseEntity<List<MealFood>>(HttpStatus.NOT_FOUND);
 
         } catch (Exception e) {
-            return new ResponseEntity<List<Food>>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<List<MealFood>>(HttpStatus.INTERNAL_SERVER_ERROR);
 
         }
     }

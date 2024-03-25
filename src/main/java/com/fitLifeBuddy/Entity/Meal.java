@@ -31,12 +31,7 @@ public class Meal implements Serializable {
     private Daily daily;
 
     @JsonIgnore
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "mealFood",
-            joinColumns = @JoinColumn(name = "idMeal"),
-            inverseJoinColumns = @JoinColumn(name = "idFood")
-    )
-    private Set<Food> foods = new HashSet<>();
+    @OneToMany(mappedBy = "meal", fetch = FetchType.LAZY)
+    private Set<MealFood> mealFoods = new HashSet<>();
 
 }

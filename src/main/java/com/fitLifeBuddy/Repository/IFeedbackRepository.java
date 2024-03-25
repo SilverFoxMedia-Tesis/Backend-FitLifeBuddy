@@ -11,7 +11,7 @@ import java.util.List;
 
 @Repository
 public interface IFeedbackRepository extends JpaRepository<Feedback, Long> {
-    @Query("select fe.questions from Feedback fe where fe.idFeedback =: feedbackId")
+    @Query("select fe.questions from Feedback fe where fe.idFeedback = :feedbackId")
     public List<Question> findQuestionsByIdFeedback(@Param("feedbackId")Long idFeedback);
 
 }

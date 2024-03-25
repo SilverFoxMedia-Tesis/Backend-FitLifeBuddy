@@ -2,8 +2,8 @@ package com.fitLifeBuddy.Entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fitLifeBuddy.Entity.Enum.DietType;
 import com.fitLifeBuddy.Entity.Enum.Frecuently;
+import com.fitLifeBuddy.Entity.Enum.Status;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -28,13 +28,17 @@ public class Plan implements Serializable {
     @Enumerated(EnumType.STRING)
     @Column(name = "DietType", nullable = false, length = 20)
     private DietType dietType;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "Status", nullable = false, length = 8)
+    private Status status;
+
 
     @JsonIgnore
     @OneToMany(mappedBy = "plan", fetch = FetchType.LAZY)
     private Set<Daily> dailies = new HashSet<>();
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idPacient",nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "idPacient", nullable = false)
     @JsonIgnoreProperties({"hibernateLazyInitializer","handler"})
     private Pacient pacient;
 

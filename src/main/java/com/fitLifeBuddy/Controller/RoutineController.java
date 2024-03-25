@@ -15,10 +15,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @CrossOrigin
 @RestController
@@ -97,28 +95,13 @@ public class RoutineController {
             @ApiResponse(code = 201, message = "Routine creado"),
             @ApiResponse(code = 404, message = "Routine no creado")
     })
-    public ResponseEntity<Routine> insertRoutine(@PathVariable("idDaily") Long idDaily, @RequestParam List<Long> idExercises, @Valid @RequestBody Routine routine) {
+    public ResponseEntity<Routine> insertRoutine(@Valid @RequestBody Routine routine) {
         try {
-            Optional<Daily> daily = dailyService.getById(idDaily);
+            Routine routineNew = routineService.save(routine);
+            return ResponseEntity.status(HttpStatus.CREATED).body(routineNew);
 
-            if (daily.isPresent()) {
-                routine.setDaily(daily.get());
-
-                Set<Exercise> exercises = new HashSet<>();
-                for (Long idExercise : idExercises) {
-                    Optional<Exercise> exercise = exerciseService.getById(idExercise);
-                    exercise.ifPresent(exercises::add);
-                }
-
-                routine.setExercises(exercises);
-
-                Routine routineNew = routineService.save(routine);
-                return ResponseEntity.status(HttpStatus.CREATED).body(routineNew);
-            } else {
-                return new ResponseEntity<>(HttpStatus.FAILED_DEPENDENCY);
-            }
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<Routine>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -140,22 +123,22 @@ public class RoutineController {
         }
     }
 
-    @GetMapping("searchExercisesByIdRoutine/{idRoutine}")
-    @ApiOperation(value = "Buscar Exercises por Routine", notes = "Métodos para encontrar Exercises por su respectivo Routine")
+    @GetMapping("searchRoutineExercisesByIdRoutine/{idRoutine}")
+    @ApiOperation(value = "Buscar RoutineExercises por Routine", notes = "Métodos para encontrar RoutineExercises por su respectivo Routine")
     @ApiResponses({
-            @ApiResponse(code = 201, message = "Exercises encontrados"),
-            @ApiResponse(code = 404, message = "Exercises no encontrados")
+            @ApiResponse(code = 201, message = "RoutineExercises encontrados"),
+            @ApiResponse(code = 404, message = "RoutineExercises no encontrados")
     })
-    public ResponseEntity<List<Exercise>> findFoodsByIdRoutine(@PathVariable("idRoutine") Long idRoutine) {
+    public ResponseEntity<List<RoutineExercise>> findRoutineExercisesByIdRoutine(@PathVariable("idRoutine") Long idRoutine) {
         try {
-            List<Exercise> exercises = routineService.findFoodsByIdRoutine(idRoutine);
-            if (exercises.size() > 0)
-                return new ResponseEntity<List<Exercise>>(exercises, HttpStatus.OK);
+            List<RoutineExercise> routineExercises = routineService.findRoutineExercisesByIdRoutine(idRoutine);
+            if (routineExercises.size() > 0)
+                return new ResponseEntity<List<RoutineExercise>>(routineExercises, HttpStatus.OK);
             else
-                return new ResponseEntity<List<Exercise>>(HttpStatus.NOT_FOUND);
+                return new ResponseEntity<List<RoutineExercise>>(HttpStatus.NOT_FOUND);
 
         } catch (Exception e) {
-            return new ResponseEntity<List<Exercise>>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<List<RoutineExercise>>(HttpStatus.INTERNAL_SERVER_ERROR);
 
         }
     }

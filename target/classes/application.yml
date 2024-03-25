@@ -15,4 +15,7 @@ spring:
         jdbc:
           lob:
             non-contextual-creation: true
-
+logging:
+  level:
+    root: WARN
+    com.fitLifeBuddy: DEBUG

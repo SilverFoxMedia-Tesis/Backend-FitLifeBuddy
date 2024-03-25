@@ -1,10 +1,8 @@
 package com.fitLifeBuddy.Service;
 
 import com.fitLifeBuddy.Entity.Daily;
-import com.fitLifeBuddy.Entity.Enum.DietType;
 import com.fitLifeBuddy.Entity.Enum.Frecuently;
 import com.fitLifeBuddy.Entity.Plan;
-import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 

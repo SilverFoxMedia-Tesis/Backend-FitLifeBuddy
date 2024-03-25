@@ -36,10 +36,10 @@ public class Pacient implements Serializable {
     @JsonIgnoreProperties({"hibernateLazyInitializer","handler"})
     private PacientHistory pacientHistory;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idPlan",nullable = true)
-    @JsonIgnoreProperties({"hibernateLazyInitializer","handler"})
-    private Plan plan;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "pacient", fetch = FetchType.LAZY)
+    private Set<Plan> plans = new HashSet<>();
 
     @JsonIgnore
     @OneToMany(mappedBy = "pacient", fetch = FetchType.LAZY)

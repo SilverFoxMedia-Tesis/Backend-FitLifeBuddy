@@ -2,6 +2,7 @@ package com.fitLifeBuddy.Service.impl;
 
 import com.fitLifeBuddy.Entity.Food;
 import com.fitLifeBuddy.Entity.Meal;
+import com.fitLifeBuddy.Entity.MealFood;
 import com.fitLifeBuddy.Repository.IMealRepository;
 import com.fitLifeBuddy.Service.IMealService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +47,7 @@ public class MealServiceImpl implements IMealService {
     }
 
     @Override
-    public List<Food> findFoodsByIdMeal(Long idMeal) throws Exception {
-        return mealRepository.findFoodsByIdMeal(idMeal);
+    public List<MealFood> findMealFoodsByIdMeal(Long idMeal) throws Exception {
+        return mealRepository.findMealFoodsByIdMeal(idMeal);
     }
 }

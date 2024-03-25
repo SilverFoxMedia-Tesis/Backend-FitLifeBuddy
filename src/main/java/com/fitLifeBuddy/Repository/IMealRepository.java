@@ -2,6 +2,7 @@ package com.fitLifeBuddy.Repository;
 
 import com.fitLifeBuddy.Entity.Food;
 import com.fitLifeBuddy.Entity.Meal;
+import com.fitLifeBuddy.Entity.MealFood;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -12,6 +13,6 @@ import java.util.List;
 public interface IMealRepository extends JpaRepository<Meal, Long> {
     public List<Meal> findByNameMeal(String nameMeal);
 
-    @Query("select m.foods from Meal m where m.idMeal =: mealId")
-    public List<Food> findFoodsByIdMeal(@Param("mealId")Long idMeal);
+    @Query("select mf from MealFood mf where mf.meal.idMeal =:mealId")
+    public List<MealFood> findMealFoodsByIdMeal(@Param("mealId")Long idMeal);
 }

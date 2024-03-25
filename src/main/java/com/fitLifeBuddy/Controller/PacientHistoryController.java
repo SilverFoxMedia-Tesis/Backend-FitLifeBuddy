@@ -49,7 +49,7 @@ public class PacientHistoryController {
     }
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Buscar Plan por Id", notes = "Métodos para encontrar un PacientHistory por su respectivo Id")
+    @ApiOperation(value = "Buscar PacientHistory por Id", notes = "Métodos para encontrar un PacientHistory por su respectivo Id")
     @ApiResponses({
             @ApiResponse(code = 201, message = "PacientHistory encontrado"),
             @ApiResponse(code = 404, message = "PacientHistory no encontrado")

@@ -1,9 +1,8 @@
 package com.fitLifeBuddy.Service.impl;
 
-import com.fitLifeBuddy.Entity.Enum.DietType;
-import com.fitLifeBuddy.Entity.Enum.FoodOrigin;
+import com.fitLifeBuddy.Entity.Enum.CategoryName;
 import com.fitLifeBuddy.Entity.Food;
-import com.fitLifeBuddy.Entity.Meal;
+import com.fitLifeBuddy.Entity.MealFood;
 import com.fitLifeBuddy.Repository.IFoodRepository;
 import com.fitLifeBuddy.Service.IFoodService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,22 +47,12 @@ public class FoodServiceImpl implements IFoodService {
     }
 
     @Override
-    public List<Food> findByCategoryName(String categoryName) {
+    public List<Food> findByCategoryName(CategoryName categoryName) {
         return foodRepository.findByCategoryName(categoryName);
     }
 
     @Override
-    public List<Food> findByFoodOrigin(FoodOrigin foodOrigin) {
-        return foodRepository.findByFoodOrigin(foodOrigin);
-    }
-
-    @Override
-    public List<Food> findByDietType(DietType dietType) {
-        return foodRepository.findByDietType(dietType);
-    }
-
-    @Override
-    public List<Meal> findMealsByIdFood(Long idFood) {
-        return foodRepository.findMealsByIdFood(idFood);
+    public List<MealFood> findMealFoodsByIdFood(Long idFood) {
+        return foodRepository.findMealFoodsByIdFood(idFood);
     }
 }

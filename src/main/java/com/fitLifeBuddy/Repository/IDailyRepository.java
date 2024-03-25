@@ -14,11 +14,11 @@ import java.util.List;
 
 @Repository
 public interface IDailyRepository extends JpaRepository<Daily, Long> {
-    @Query("select d from Daily d where d.date =: dateDaily")
+    @Query("select d from Daily d where d.date = :dateDaily")
     public List<Daily> findByDate(@Param("dateDaily") Date date);
-    @Query("select d.meals from Daily d where d.idDaily =: dailyId")
+    @Query("select d.meals from Daily d where d.idDaily = :dailyId")
     public List<Meal> findMealsByIdDaily(@Param("dailyId")Long idDaily);
-    @Query("select d.routines from Daily d where d.idDaily =: dailyId")
+    @Query("select d.routines from Daily d where d.idDaily = :dailyId")
     public List<Routine> findRoutinesByIdDaily(@Param("dailyId")Long idDaily);
 
 }
