@@ -33,9 +33,6 @@ public class MealController {
     @Autowired
     private IDailyService dailyService;
 
-    @Autowired
-    private IFoodService foodService;
-
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Listar Meals", notes = "Metodo para listar a todos los Meals")
     @ApiResponses({
@@ -99,10 +96,15 @@ public class MealController {
             @ApiResponse(code = 201, message = "Meal creado"),
             @ApiResponse(code = 400, message = "Información inválida o incompleta para crear el Meal")
     })
-    public ResponseEntity<Meal> insertMeal(@Valid @RequestBody Meal meal) {
+    public ResponseEntity<Meal> insertMeal(@PathVariable("idDaily") Long idDaily,@Valid @RequestBody Meal meal) {
         try {
-            Meal mealNew = mealService.save(meal);
-            return ResponseEntity.status(HttpStatus.CREATED).body(mealNew);
+            Optional<Daily> daily = dailyService.getById(idDaily);
+            if (daily.isPresent()){
+                meal.setDaily(daily.get());
+                Meal mealNew = mealService.save(meal);
+                return ResponseEntity.status(HttpStatus.CREATED).body(mealNew);
+            } else
+                return new ResponseEntity<Meal>(HttpStatus.FAILED_DEPENDENCY);
 
         } catch (Exception e) {
             return new ResponseEntity<Meal>(HttpStatus.INTERNAL_SERVER_ERROR);

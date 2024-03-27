@@ -43,8 +43,8 @@ public class ExerciseServiceImpl implements IExerciseService {
     }
 
     @Override
-    public List<Exercise> findByTitle(String title) throws Exception {
-        return exerciseRepository.findByTitle(title);
+    public List<Exercise> findByWorkout(String workout) throws Exception {
+        return exerciseRepository.findByWorkout(workout);
     }
 
     @Override

@@ -1,8 +1,12 @@
 package com.fitLifeBuddy.Controller;
 
 
+import com.fitLifeBuddy.Entity.Food;
+import com.fitLifeBuddy.Entity.Meal;
 import com.fitLifeBuddy.Entity.MealFood;
+import com.fitLifeBuddy.Service.IFoodService;
 import com.fitLifeBuddy.Service.IMealFoodService;
+import com.fitLifeBuddy.Service.IMealService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -24,6 +28,12 @@ import java.util.Optional;
 public class MealFoodController {
     @Autowired
     private IMealFoodService mealFoodService;
+
+    @Autowired
+    private IMealService mealService;
+
+    @Autowired
+    private IFoodService foodService;
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Listar MealFoods", notes = "Metodo para listar a todos los MealFoods")
@@ -82,16 +92,24 @@ public class MealFoodController {
         }
     }
 
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/{idMeal}/{idFood}",consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Registro de MealFoods", notes = "Método que registra MealFoods en BD")
     @ApiResponses({
             @ApiResponse(code = 201, message = "MealFood creado"),
             @ApiResponse(code = 404, message = "MealFood no creado")
     })
-    public ResponseEntity<MealFood> insertMealFood(@Valid @RequestBody MealFood mealFood) {
+    public ResponseEntity<MealFood> insertMealFood(@PathVariable("idMeal") Long idMeal, @PathVariable("idFood") Long idFood,@Valid @RequestBody MealFood mealFood) {
         try {
-            MealFood mealFoodNew = mealFoodService.save(mealFood);
-            return ResponseEntity.status(HttpStatus.CREATED).body(mealFoodNew);
+            Optional<Meal> meal = mealService.getById(idMeal);
+            Optional<Food> food = foodService.getById(idFood);
+            if (meal.isPresent() && food.isPresent()){
+                mealFood.setMeal(meal.get());
+                mealFood.setFood(food.get());
+                MealFood mealFoodNew = mealFoodService.save(mealFood);
+                return ResponseEntity.status(HttpStatus.CREATED).body(mealFoodNew);
+            } else
+                return new ResponseEntity<MealFood>(HttpStatus.FAILED_DEPENDENCY);
+
         } catch (Exception e) {
             return new ResponseEntity<MealFood>(HttpStatus.INTERNAL_SERVER_ERROR);
 

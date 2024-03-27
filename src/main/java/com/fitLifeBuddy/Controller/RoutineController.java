@@ -29,9 +29,6 @@ public class RoutineController {
     @Autowired
     private IDailyService dailyService;
 
-    @Autowired
-    private IExerciseService exerciseService;
-
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Listar Meals", notes = "Metodo para listar a todos los Meals")
     @ApiResponses({
@@ -95,10 +92,15 @@ public class RoutineController {
             @ApiResponse(code = 201, message = "Routine creado"),
             @ApiResponse(code = 404, message = "Routine no creado")
     })
-    public ResponseEntity<Routine> insertRoutine(@Valid @RequestBody Routine routine) {
+    public ResponseEntity<Routine> insertRoutine(@PathVariable("idDaily") Long idDaily, @Valid @RequestBody Routine routine) {
         try {
-            Routine routineNew = routineService.save(routine);
-            return ResponseEntity.status(HttpStatus.CREATED).body(routineNew);
+            Optional<Daily> daily = dailyService.getById(idDaily);
+            if (daily.isPresent()) {
+                routine.setDaily(daily.get());
+                Routine routineNew = routineService.save(routine);
+                return ResponseEntity.status(HttpStatus.CREATED).body(routineNew);
+            } else
+                return new ResponseEntity<Routine>(HttpStatus.FAILED_DEPENDENCY);
 
         } catch (Exception e) {
             return new ResponseEntity<Routine>(HttpStatus.INTERNAL_SERVER_ERROR);

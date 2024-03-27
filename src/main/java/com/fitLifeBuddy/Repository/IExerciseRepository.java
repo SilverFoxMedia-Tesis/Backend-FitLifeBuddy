@@ -13,7 +13,7 @@ import java.util.List;
 
 @Repository
 public interface IExerciseRepository extends JpaRepository<Exercise, Long> {
-    public List<Exercise> findByTitle(String title);
+    public List<Exercise> findByWorkout(String workout);
     public List<Exercise> findByTypeExercise(TypeExercise typeExercise);
     public List<Exercise> findByBodyPart(BodyPart bodyPart);
 

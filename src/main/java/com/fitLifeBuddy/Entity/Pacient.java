@@ -36,7 +36,6 @@ public class Pacient implements Serializable {
     @JsonIgnoreProperties({"hibernateLazyInitializer","handler"})
     private PacientHistory pacientHistory;
 
-
     @JsonIgnore
     @OneToMany(mappedBy = "pacient", fetch = FetchType.LAZY)
     private Set<Plan> plans = new HashSet<>();

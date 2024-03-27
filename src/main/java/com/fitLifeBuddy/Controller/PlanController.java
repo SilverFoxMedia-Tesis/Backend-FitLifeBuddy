@@ -1,7 +1,9 @@
 package com.fitLifeBuddy.Controller;
 
 import com.fitLifeBuddy.Entity.Daily;
+import com.fitLifeBuddy.Entity.Enum.DietType;
 import com.fitLifeBuddy.Entity.Enum.Frecuently;
+import com.fitLifeBuddy.Entity.Enum.Status;
 import com.fitLifeBuddy.Entity.Pacient;
 import com.fitLifeBuddy.Entity.Plan;
 import com.fitLifeBuddy.Service.IPacientService;
@@ -97,6 +99,11 @@ public class PlanController {
     public ResponseEntity<Plan> insertPlan(@PathVariable("idPacient") Long idPacient ,@Valid @RequestBody Plan plan) {
         try {
             Optional<Pacient> pacient = pacientService.getById(idPacient);
+            List<Plan> existingPlans = planService.findActivedPlanByPacientId(idPacient);
+            for (Plan existingPlan : existingPlans) {
+                existingPlan.setStatus(Status.CANCELED);
+                planService.save(existingPlan);
+            }
             if (pacient.isPresent()){
                 plan.setPacient(pacient.get());
                 Plan planNew = planService.save(plan);

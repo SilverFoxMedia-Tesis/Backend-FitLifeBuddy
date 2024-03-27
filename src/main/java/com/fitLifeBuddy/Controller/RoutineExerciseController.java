@@ -1,5 +1,7 @@
 package com.fitLifeBuddy.Controller;
 
+import com.fitLifeBuddy.Entity.Exercise;
+import com.fitLifeBuddy.Entity.Routine;
 import com.fitLifeBuddy.Entity.RoutineExercise;
 import com.fitLifeBuddy.Service.IExerciseService;
 import com.fitLifeBuddy.Service.IRoutineExerciseService;
@@ -25,6 +27,12 @@ import java.util.Optional;
 public class RoutineExerciseController {
     @Autowired
     private IRoutineExerciseService routineExerciseService;
+
+    @Autowired
+    private IRoutineService routineService;
+
+    @Autowired
+    private IExerciseService exerciseService;
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Listar RoutineExercises", notes = "Metodo para listar a todos los RoutineExercises")
@@ -83,16 +91,24 @@ public class RoutineExerciseController {
         }
     }
 
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/{idRoutine}/{idExercise}",consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Registro de RoutineExercises", notes = "Método que registra RoutineExercises en BD")
     @ApiResponses({
             @ApiResponse(code = 201, message = "RoutineExercise creado"),
             @ApiResponse(code = 404, message = "RoutineExercise no creado")
     })
-    public ResponseEntity<RoutineExercise> insertRoutineExercise(@Valid @RequestBody RoutineExercise routineExercise) {
+    public ResponseEntity<RoutineExercise> insertRoutineExercise(@PathVariable("idRoutine") Long idRoutine, @PathVariable("idExercise") Long idExercise,@Valid @RequestBody RoutineExercise routineExercise) {
         try {
-            RoutineExercise routineExerciseNew = routineExerciseService.save(routineExercise);
-            return ResponseEntity.status(HttpStatus.CREATED).body(routineExerciseNew);
+            Optional<Routine> routine = routineService.getById(idRoutine);
+            Optional<Exercise> exercise = exerciseService.getById(idExercise);
+            if (routine.isPresent() && exercise.isPresent()){
+                routineExercise.setRoutine(routine.get());
+                routineExercise.setExercise(exercise.get());
+                RoutineExercise routineExerciseNew = routineExerciseService.save(routineExercise);
+                return ResponseEntity.status(HttpStatus.CREATED).body(routineExerciseNew);
+
+            } else
+                return new ResponseEntity<RoutineExercise>(HttpStatus.FAILED_DEPENDENCY);
         } catch (Exception e) {
             return new ResponseEntity<RoutineExercise>(HttpStatus.INTERNAL_SERVER_ERROR);
 

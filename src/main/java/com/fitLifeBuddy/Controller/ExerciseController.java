@@ -119,15 +119,15 @@ public class ExerciseController {
         }
     }
 
-    @GetMapping("searchByTitle/{title}")
-    @ApiOperation(value = "Buscar Exercise por title", notes = "Métodos para encontrar un Exercise por su respectivo title")
+    @GetMapping("searchByWorkout/{workout}")
+    @ApiOperation(value = "Buscar Exercise por Workout", notes = "Métodos para encontrar un Workout por su respectivo title")
     @ApiResponses({
-            @ApiResponse(code = 201, message = "Exercise encontrados"),
-            @ApiResponse(code = 404, message = "Exercise no encontrados")
+            @ApiResponse(code = 201, message = "Workout encontrados"),
+            @ApiResponse(code = 404, message = "Workout no encontrados")
     })
-    public ResponseEntity<List<Exercise>> findByTitle(@PathVariable("title") String title) {
+    public ResponseEntity<List<Exercise>> findByWorkout(@PathVariable("Workout") String workout) {
         try {
-            List<Exercise> exercises = exerciseService.findByTitle(title);
+            List<Exercise> exercises = exerciseService.findByWorkout(workout);
             if (exercises.size() > 0)
                 return new ResponseEntity<List<Exercise>>(exercises, HttpStatus.OK);
             else

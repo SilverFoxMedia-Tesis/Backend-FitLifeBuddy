@@ -43,5 +43,4 @@ public class PacientHistory implements Serializable {
     @JsonIgnoreProperties({"hibernateLazyInitializer","handler"})
     private Pacient pacient;
 
-
 }

@@ -2,6 +2,7 @@ package com.fitLifeBuddy.Entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fitLifeBuddy.Entity.Enum.DietType;
 import com.fitLifeBuddy.Entity.Enum.Frecuently;
 import com.fitLifeBuddy.Entity.Enum.Status;
 import lombok.AllArgsConstructor;
@@ -30,8 +31,13 @@ public class Plan implements Serializable {
     private DietType dietType;
     @Enumerated(EnumType.STRING)
     @Column(name = "Status", nullable = false, length = 8)
-    private Status status;
-
+    private Status status = Status.ACTIVED;
+    @PrePersist
+    public void prePersist() {
+        if (this.status == null) {
+            this.status = Status.ACTIVED;
+        }
+    }
 
     @JsonIgnore
     @OneToMany(mappedBy = "plan", fetch = FetchType.LAZY)
