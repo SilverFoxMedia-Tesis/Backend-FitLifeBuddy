@@ -40,7 +40,7 @@ public class PacientServiceImpl implements IPacientService {
     }
 
     @Override
-    public PacientHistory findPacientHistoryByIdPacient(Long idPacient) throws Exception {
+    public List<PacientHistory> findPacientHistoryByIdPacient(Long idPacient) throws Exception {
         return pacientRepository.findPacientHistoryByIdPacient(idPacient);
     }
 

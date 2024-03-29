@@ -31,10 +31,9 @@ public class Pacient implements Serializable {
     @Temporal(TemporalType.DATE)
     private Date birthDate;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idPacientHistory",nullable = true)
-    @JsonIgnoreProperties({"hibernateLazyInitializer","handler"})
-    private PacientHistory pacientHistory;
+    @JsonIgnore
+    @OneToMany(mappedBy = "pacient", fetch = FetchType.LAZY)
+    private Set<PacientHistory> pacientHistories = new HashSet<>();
 
     @JsonIgnore
     @OneToMany(mappedBy = "pacient", fetch = FetchType.LAZY)

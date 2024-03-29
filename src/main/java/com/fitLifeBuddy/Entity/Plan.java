@@ -30,7 +30,7 @@ public class Plan implements Serializable {
     @Column(name = "DietType", nullable = false, length = 20)
     private DietType dietType;
     @Enumerated(EnumType.STRING)
-    @Column(name = "Status", nullable = false, length = 8)
+    @Column(name = "Status", nullable = false, length = 10)
     private Status status = Status.ACTIVED;
     @PrePersist
     public void prePersist() {

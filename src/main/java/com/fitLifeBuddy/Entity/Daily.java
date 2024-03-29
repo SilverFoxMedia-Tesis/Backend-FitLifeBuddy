@@ -2,6 +2,7 @@ package com.fitLifeBuddy.Entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fitLifeBuddy.Entity.Enum.Status;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -26,6 +27,17 @@ public class Daily implements Serializable {
     private Date date;
     @Column(name = "DateNumber", nullable = false)
     private Integer dateNumber;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "Status", nullable = false, length = 10)
+    private Status status = Status.UNFILLED;
+
+    @PrePersist
+    public void prePersist() {
+        if (this.status == null) {
+            this.status = Status.UNFILLED;
+        }
+    }
 
     @JsonIgnore
     @OneToMany(mappedBy = "daily", fetch = FetchType.LAZY)

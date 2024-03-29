@@ -38,8 +38,8 @@ public class PacientHistory implements Serializable {
     @Column(name = "CALC",nullable = false)
     private String calc;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idPacient",nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "idPacient", nullable = false)
     @JsonIgnoreProperties({"hibernateLazyInitializer","handler"})
     private Pacient pacient;
 

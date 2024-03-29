@@ -1,6 +1,7 @@
 package com.fitLifeBuddy.Service.impl;
 
 import com.fitLifeBuddy.Entity.Daily;
+import com.fitLifeBuddy.Entity.Enum.Status;
 import com.fitLifeBuddy.Entity.Exercise;
 import com.fitLifeBuddy.Entity.Meal;
 import com.fitLifeBuddy.Entity.Routine;
@@ -55,5 +56,10 @@ public class DailyServiceImpl implements IDailyService {
     @Override
     public List<Routine> findRoutinesByIdDaily(Long idDaily) throws Exception {
         return dailyRepository.findRoutinesByIdDaily(idDaily);
+    }
+
+    @Override
+    public List<Daily> findDailyByDateAndStatusUnfilled(Date date) throws Exception {
+        return dailyRepository.findByDateAndStatus(date, Status.UNFILLED);
     }
 }

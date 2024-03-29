@@ -11,7 +11,7 @@ import java.util.List;
 @Repository
 public interface IPacientRepository extends JpaRepository<Pacient, Long> {
     @Query("select ph from PacientHistory ph where ph.pacient.idPacient = :pacientId")
-    public PacientHistory findPacientHistoryByIdPacient(@Param("pacientId") Long idPacient);
+    public List<PacientHistory> findPacientHistoryByIdPacient(@Param("pacientId") Long idPacient);
     @Query("select pl from Plan pl where pl.pacient.idPacient = :pacientId")
     public List<Plan> findPlanByIdPacient(@Param("pacientId") Long idPacient);
     @Query("select pa from Pacient pa where pa.birthDate = :biDay")

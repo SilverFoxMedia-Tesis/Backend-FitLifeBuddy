@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface IPacientService extends CrudService<Pacient>{
 
-    public PacientHistory findPacientHistoryByIdPacient(Long idPacient)throws Exception;
+    public List<PacientHistory> findPacientHistoryByIdPacient(Long idPacient)throws Exception;
     public List<Plan> findPlanByIdPacient(Long idPacient)throws Exception;
     public List<Pacient> find(Date birthDate)throws Exception;
 

@@ -1,6 +1,7 @@
 package com.fitLifeBuddy.Controller;
 
 import com.fitLifeBuddy.Entity.*;
+import com.fitLifeBuddy.Entity.Enum.Status;
 import com.fitLifeBuddy.Service.IDailyService;
 import com.fitLifeBuddy.Service.IPlanService;
 import io.swagger.annotations.Api;
@@ -183,6 +184,39 @@ public class DailyController {
         } catch (Exception e) {
             return new ResponseEntity<List<Routine>>(HttpStatus.INTERNAL_SERVER_ERROR);
 
+        }
+    }
+
+    @PostMapping("/completeToday")
+    @ApiOperation(value = "Completar Daily de Hoy", notes = "Marca el Daily de hoy como completado si su estado es UNFILLED")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Daily completado"),
+            @ApiResponse(code = 404, message = "Daily no encontrado o ya completado")
+    })
+    public ResponseEntity<?> completeTodayDaily() {
+        try {
+            // Obtener la fecha de hoy
+            Date today = new Date();
+
+            // Buscar Dailies por fecha de hoy y estado UNFILLED
+            List<Daily> dailiesToday = dailyService.findDailyByDateAndStatusUnfilled(today);
+
+            if (dailiesToday.isEmpty()) {
+                return new ResponseEntity<>("No hay Dailies UNFILLED para hoy.", HttpStatus.NOT_FOUND);
+            }
+
+            // Suponiendo que solo debe haber un Daily por día, tomamos el primero
+            Daily todayDaily = dailiesToday.get(0);
+
+            // Cambiar el estado a COMPLETED
+            todayDaily.setStatus(Status.COMPLETED);
+
+            // Guardar el cambio
+            dailyService.save(todayDaily);
+
+            return new ResponseEntity<>(todayDaily, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

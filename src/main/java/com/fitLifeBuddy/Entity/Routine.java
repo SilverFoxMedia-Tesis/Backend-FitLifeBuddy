@@ -25,7 +25,6 @@ public class Routine implements Serializable {
     @Column(name = "DescriptionRoutine", nullable = false, length = 100)
     private String descriptionRoutine;
 
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "idDaily", nullable = false)
     @JsonIgnoreProperties({"hibernateLazyInitializer","handler"})

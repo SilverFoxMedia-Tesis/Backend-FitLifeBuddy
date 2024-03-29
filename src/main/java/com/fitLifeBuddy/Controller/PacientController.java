@@ -125,19 +125,15 @@ public class PacientController {
             @ApiResponse(code = 201, message = "PacientHistory encontrados"),
             @ApiResponse(code = 404, message = "PacientHistory no encontrados")
     })
-    public ResponseEntity<PacientHistory> findPacientHistoryByIdPacient(@PathVariable("idPacient") Long idPacient) {
+    public ResponseEntity<List<PacientHistory>> findPacientHistoryByIdPacient(@PathVariable("idPacient") Long idPacient) {
         try {
-            logger.debug("Iniciando búsqueda de PacientHistory para Pacient ID: {}", idPacient);
-            PacientHistory pacientHistory = pacientService.findPacientHistoryByIdPacient(idPacient);
-            if (pacientHistory == null) {
-                logger.warn("No se encontró PacientHistory para Pacient ID: {}", idPacient);
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            List<PacientHistory> pacientHistories = pacientService.findPacientHistoryByIdPacient(idPacient);
+            if (pacientHistories.size() > 0) {
+                return new ResponseEntity<>(pacientHistories, HttpStatus.OK);
             } else {
-                logger.debug("PacientHistory encontrado para Pacient ID: {}", idPacient);
-                return new ResponseEntity<>(pacientHistory, HttpStatus.OK);
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
         } catch (Exception e) {
-            logger.error("Error al buscar PacientHistory para Pacient ID: " + idPacient, e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
