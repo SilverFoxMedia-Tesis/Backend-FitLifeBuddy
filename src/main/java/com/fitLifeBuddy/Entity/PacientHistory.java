@@ -1,6 +1,10 @@
 package com.fitLifeBuddy.Entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fitLifeBuddy.Entity.Enum.DietType;
+import com.fitLifeBuddy.Entity.Enum.Frecuently;
+import com.fitLifeBuddy.Entity.Enum.Gender;
+import com.fitLifeBuddy.Entity.Enum.PhysicalActivity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,26 +21,26 @@ public class PacientHistory implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idPacientHistory;
-    @Column(name = "SCC",nullable = false)
-    private String scc;
-    @Column(name = "FAF",nullable = false)
-    private Integer faf;
-    @Column(name = "TUE",nullable = false)
-    private Integer tue;
-    @Column(name = "MTRANS",nullable = false)
-    private String mtrans;
-    @Column(name = "FAVC",nullable = false)
-    private String favc;
-    @Column(name = "FCVC",nullable = false)
-    private Integer fcvc;
-    @Column(name = "NCP",nullable = false)
-    private Integer ncp;
-    @Column(name = "CAEC",nullable = false)
-    private String caec;
-    @Column(name = "CH2O",nullable = false)
-    private Integer ch2o;
-    @Column(name = "CALC",nullable = false)
-    private String calc;
+    @Column(name = "Height",nullable = false)
+    private Float height;
+    @Column(name = "Weight",nullable = false)
+    private Float weight;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "Gender",nullable = false,length = 10)
+    private Gender gender;
+    @Column(name = "Age", nullable = false)
+    private Long age;
+    @Column(name = "AbdominalCircumference", nullable = false)
+    private Long abdominalCircumference;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "PhysicalActivity", nullable = true,length = 12)
+    private PhysicalActivity physicalActivity;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "Frecuently", nullable = false, length = 20)
+    private Frecuently frecuently;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "DietType", nullable = false, length = 20)
+    private DietType dietType;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "idPacient", nullable = false)

@@ -12,6 +12,7 @@ com\fitLifeBuddy\Service\impl\RoutineExerciseServiceImpl.class
 com\fitLifeBuddy\Controller\DailyController.class
 com\fitLifeBuddy\Controller\RoutineExerciseController.class
 com\fitLifeBuddy\Repository\IFeedbackRepository.class
+com\fitLifeBuddy\Entity\Enum\PhysicalActivity.class
 com\fitLifeBuddy\Service\IFeedbackService.class
 com\fitLifeBuddy\Entity\Enum\BodyPart.class
 com\fitLifeBuddy\Service\CrudService.class
@@ -84,6 +85,7 @@ com\fitLifeBuddy\Repository\IMealFoodRepository.class
 com\fitLifeBuddy\Service\INutritionistService.class
 com\fitLifeBuddy\Service\IRoutineService.class
 com\fitLifeBuddy\Service\impl\FoodConditionServiceImpl.class
+com\fitLifeBuddy\Entity\Enum\Gender.class
 com\fitLifeBuddy\Controller\PacientHistoryController.class
 com\fitLifeBuddy\Entity\MealFood.class
 com\fitLifeBuddy\Repository\IOptionRepository.class

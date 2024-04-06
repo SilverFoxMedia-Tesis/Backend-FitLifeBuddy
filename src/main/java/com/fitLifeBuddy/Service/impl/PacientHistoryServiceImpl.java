@@ -39,8 +39,4 @@ public class PacientHistoryServiceImpl implements IPacientHistoryService {
         return pacientHistoryRepository.findById(id);
     }
 
-    @Override
-    public List<PacientHistory> findByMtrans(String mtrans) throws Exception {
-        return pacientHistoryRepository.findByMtrans(mtrans);
-    }
 }

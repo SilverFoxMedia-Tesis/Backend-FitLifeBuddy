@@ -127,23 +127,4 @@ public class PacientHistoryController {
         }
     }
 
-    @GetMapping("searchByMTtrans/{mtrans}")
-    @ApiOperation(value = "Buscar PacientHistory por mtrans", notes = "Métodos para encontrar un PacientHistory por su respectivo mtrans")
-    @ApiResponses({
-            @ApiResponse(code = 201, message = "PacientHistory encontrados"),
-            @ApiResponse(code = 404, message = "PacientHistory no encontrados")
-    })
-    public ResponseEntity<List<PacientHistory>> findByMtrans(@PathVariable("mtrans") String mtrans) {
-        try {
-            List<PacientHistory> pacientHistories = pacientHistoryService.findByMtrans(mtrans);
-            if (pacientHistories.size() > 0)
-                return new ResponseEntity<List<PacientHistory>>(pacientHistories, HttpStatus.OK);
-            else
-                return new ResponseEntity<List<PacientHistory>>(HttpStatus.NOT_FOUND);
-
-        } catch (Exception e) {
-            return new ResponseEntity<List<PacientHistory>>(HttpStatus.INTERNAL_SERVER_ERROR);
-
-        }
-    }
 }

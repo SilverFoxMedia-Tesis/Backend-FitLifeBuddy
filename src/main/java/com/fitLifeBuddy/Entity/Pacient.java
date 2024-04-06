@@ -21,12 +21,7 @@ public class Pacient implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idPacient;
-    @Column(name = "Height",nullable = false)
-    private Float height;
-    @Column(name = "Weight",nullable = false)
-    private Float weight;
-    @Column(name = "Gender",nullable = false,length = 10)
-    private String gender;
+
     @Column(name = "BirthDate",nullable = false)
     @Temporal(TemporalType.DATE)
     private Date birthDate;

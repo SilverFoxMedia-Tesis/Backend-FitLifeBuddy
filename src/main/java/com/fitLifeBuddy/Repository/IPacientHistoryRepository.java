@@ -7,5 +7,5 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 @Repository
 public interface IPacientHistoryRepository extends JpaRepository<PacientHistory, Long> {
-    public List<PacientHistory> findByMtrans(String mtrans);
+
 }

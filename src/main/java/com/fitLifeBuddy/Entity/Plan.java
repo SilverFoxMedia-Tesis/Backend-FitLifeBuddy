@@ -10,6 +10,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.print.attribute.standard.MediaSize;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
@@ -29,6 +30,19 @@ public class Plan implements Serializable {
     @Enumerated(EnumType.STRING)
     @Column(name = "DietType", nullable = false, length = 20)
     private DietType dietType;
+    @Column(name = "TMB", nullable = false)
+    private Float tmb;
+    @Column(name = "CalorieDeficit", nullable = false)
+    private Float calorieDeficit;
+    @Column(name = "Carbohydrates_g", nullable = false)
+    private Float carbohydrates_g;
+    @Column(name = "Proteins_g", nullable = false)
+    private Float proteins_g;
+    @Column(name = "Fats_g", nullable = false)
+    private Float fats_g;
+    @Column(name = "WeightLose", nullable = false)
+    private Float weightLose;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "Status", nullable = false, length = 10)
     private Status status = Status.ACTIVED;
