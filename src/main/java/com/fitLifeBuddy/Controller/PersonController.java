@@ -65,16 +65,16 @@ public class PersonController {
             @ApiResponse(code = 201, message = "Person encontrados"),
             @ApiResponse(code = 404, message = "Person no encontrados")
     })
-    public ResponseEntity<Person> findByEmailAddress(@PathVariable("emailAddress") String emailAddress) {
+    public ResponseEntity<List<Person>> findByEmailAddress(@PathVariable("emailAddress") String emailAddress) {
         try {
-            Person person = personService.findByEmailAddress(emailAddress);
-            if (person == null)
-                return new ResponseEntity<Person>(HttpStatus.NOT_FOUND);
+            List<Person> people = personService.findByEmailAddress(emailAddress);
+            if (people.size() > 0)
+                return new ResponseEntity<List<Person>>(people, HttpStatus.OK);
             else
-                return new ResponseEntity<Person>(HttpStatus.OK);
+                return new ResponseEntity<List<Person>>(HttpStatus.NOT_FOUND);
 
         } catch (Exception e) {
-            return new ResponseEntity<Person>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<List<Person>>(HttpStatus.INTERNAL_SERVER_ERROR);
 
         }
     }

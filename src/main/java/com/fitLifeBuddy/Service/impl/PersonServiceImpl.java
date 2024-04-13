@@ -40,7 +40,7 @@ public class PersonServiceImpl implements IPersonService {
     }
 
     @Override
-    public Person findByEmailAddress(String emailAddress) throws Exception {
+    public List<Person> findByEmailAddress(String emailAddress) throws Exception {
         return personRepository.findByEmailAddress(emailAddress);
     }
 

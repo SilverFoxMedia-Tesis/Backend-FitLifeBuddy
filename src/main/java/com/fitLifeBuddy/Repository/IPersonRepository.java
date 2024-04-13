@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 @Repository
 public interface IPersonRepository extends JpaRepository<Person, Long> {
-    public Person findByEmailAddress(String emailAddress);
+    public List<Person> findByEmailAddress(String emailAddress);
     public List<Person> findByFullname(String fullname);
     public List<Person> findByLastname(String lastname);
 }
