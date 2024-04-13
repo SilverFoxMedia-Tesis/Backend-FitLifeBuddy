@@ -1,7 +1,7 @@
 package com.fitLifeBuddy.Entity.Enum;
 
 public enum PhysicalActivity {
-    None,
+    No,
     Slight,
     Moderate,
     Strong,
