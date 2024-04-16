@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:postgresql://database-1.cfwis2ku6pb3.sa-east-1.rds.amazonaws.com:5432/fitLifeBuddy
+    url: jdbc:postgresql://localhost:5432/fitLifeBuddy
     username: postgres
     password: joshue123
     driver-class-name: org.postgresql.Driver

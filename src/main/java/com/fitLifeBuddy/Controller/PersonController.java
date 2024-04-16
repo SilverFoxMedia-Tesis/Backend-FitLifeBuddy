@@ -1,5 +1,6 @@
 package com.fitLifeBuddy.Controller;
 
+import com.fitLifeBuddy.Entity.DTO.PersonDTO;
 import com.fitLifeBuddy.Entity.Person;
 import com.fitLifeBuddy.Service.IPersonService;
 import io.swagger.annotations.Api;
@@ -125,20 +126,28 @@ public class PersonController {
             @ApiResponse(code = 404, message = "Person no encontrado")
     })
     public ResponseEntity<Person> updatePerson(
-            @PathVariable("id") Long id, @Valid @RequestBody Person person) {
+            @PathVariable("id") Long id, @Valid @RequestBody PersonDTO personDTO) {
         try {
-            Optional<Person> personUp = personService.getById(id);
-            if (!personUp.isPresent())
+            Optional<Person> personOptional = personService.getById(id);
+            if (!personOptional.isPresent())
                 return new ResponseEntity<Person>(HttpStatus.NOT_FOUND);
-            person.setIdPerson(id);
-            personService.save(person);
-            return new ResponseEntity<Person>(person, HttpStatus.OK);
+
+            Person person = personOptional.get();
+
+            if (personDTO.getEmailAddress() != null) person.setEmailAddress(personDTO.getEmailAddress());
+            if (personDTO.getFullname() != null) person.setFullname(personDTO.getFullname());
+            if (personDTO.getLastname() != null) person.setLastname(personDTO.getLastname());
+            if (personDTO.getPassword() != null) person.setPassword(personDTO.getPassword());
+
+            Person updatedPerson = personService.save(person);
+            return new ResponseEntity<Person>(updatedPerson, HttpStatus.OK);
 
         } catch (Exception e) {
             return new ResponseEntity<Person>(HttpStatus.INTERNAL_SERVER_ERROR);
-
         }
     }
+
+
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Registro de Usuarios", notes = "Método que registra Usuarios en BD")
@@ -146,15 +155,22 @@ public class PersonController {
             @ApiResponse(code = 201, message = "Usuario creado"),
             @ApiResponse(code = 404, message = "Usuario no creado")
     })
-    public ResponseEntity<Person> insertPerson(@Valid @RequestBody Person person) {
+    public ResponseEntity<Person> insertPerson(@Valid @RequestBody PersonDTO personDTO) {
         try {
+            Person person = new Person();
+            // Aquí convertirías el DTO a la entidad Person.
+            person.setFullname(personDTO.getFullname());
+            person.setLastname(personDTO.getLastname());
+            person.setEmailAddress(personDTO.getEmailAddress());
+            person.setPassword(personDTO.getPassword());
+
             Person personNew = personService.save(person);
             return ResponseEntity.status(HttpStatus.CREATED).body(personNew);
         } catch (Exception e) {
             return new ResponseEntity<Person>(HttpStatus.INTERNAL_SERVER_ERROR);
-
         }
     }
+
 
     @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Eliminación de Usuario", notes = "Metodo que elimina los datos de Usuario")

@@ -1,5 +1,6 @@
 package com.fitLifeBuddy.Controller;
 
+import com.fitLifeBuddy.Entity.DTO.PlanDTO;
 import com.fitLifeBuddy.Entity.Daily;
 import com.fitLifeBuddy.Entity.Enum.DietType;
 import com.fitLifeBuddy.Entity.Enum.Frecuently;
@@ -70,52 +71,79 @@ public class PlanController {
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Actualización de datos de Plan", notes = "Metodo que actualiza los datos de Plan")
-    @ApiResponses({
-            @ApiResponse(code = 200, message = "Datos de Plan actualizados"),
-            @ApiResponse(code = 404, message = "Plan no encontrado")
-    })
     public ResponseEntity<Plan> updatePlan(
-            @PathVariable("id") Long id, @Valid @RequestBody Plan plan) {
+            @PathVariable("id") Long id, @Valid @RequestBody PlanDTO planDTO) {
         try {
-            Optional<Plan> planUp = planService.getById(id);
-            if (!planUp.isPresent())
-                return new ResponseEntity<Plan>(HttpStatus.NOT_FOUND);
-            plan.setIdPlan(id);
-            planService.save(plan);
-            return new ResponseEntity<Plan>(plan, HttpStatus.OK);
+            Optional<Plan> planOptional = planService.getById(id);
+            if (!planOptional.isPresent()) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+
+            Plan plan = planOptional.get();
+            // Aplica cambios solo si el DTO proporciona un valor no nulo
+            if (planDTO.getFrecuently() != null) plan.setFrecuently(planDTO.getFrecuently());
+            if (planDTO.getDietType() != null) plan.setDietType(planDTO.getDietType());
+            if (planDTO.getTmb() != null) plan.setTmb(planDTO.getTmb());
+            if (planDTO.getCalorieDeficit() != null) plan.setCalorieDeficit(planDTO.getCalorieDeficit());
+            if (planDTO.getCarbohydrates_g() != null) plan.setCarbohydrates_g(planDTO.getCarbohydrates_g());
+            if (planDTO.getProteins_g() != null) plan.setProteins_g(planDTO.getProteins_g());
+            if (planDTO.getFats_g() != null) plan.setFats_g(planDTO.getFats_g());
+            if (planDTO.getWeightLose() != null) plan.setWeightLose(planDTO.getWeightLose());
+            if (planDTO.getStatus() != null) plan.setStatus(planDTO.getStatus());
+
+            Plan updatedPlan = planService.save(plan);
+            return ResponseEntity.ok(updatedPlan);
 
         } catch (Exception e) {
-            return new ResponseEntity<Plan>(HttpStatus.INTERNAL_SERVER_ERROR);
-
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    @PostMapping(value = "{idPacient}",consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+
+
+    @PostMapping(value = "{idPacient}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Registro de Plan", notes = "Método que registra Plans en BD")
-    @ApiResponses({
-            @ApiResponse(code = 201, message = "Plan creado"),
-            @ApiResponse(code = 404, message = "Plan no creado")
-    })
-    public ResponseEntity<Plan> insertPlan(@PathVariable("idPacient") Long idPacient ,@Valid @RequestBody Plan plan) {
+    public ResponseEntity<Plan> insertPlan(
+            @PathVariable("idPacient") Long idPacient, @Valid @RequestBody PlanDTO planDTO) {
+
         try {
-            Optional<Pacient> pacient = pacientService.getById(idPacient);
+            Optional<Pacient> pacientOptional = pacientService.getById(idPacient);
+            if (!pacientOptional.isPresent()) {
+                return new ResponseEntity<>(HttpStatus.FAILED_DEPENDENCY);
+            }
+
+            // Crear una nueva entidad Plan y aplicar los detalles del DTO
+            Plan plan = new Plan();
+            plan.setFrecuently(planDTO.getFrecuently());
+            plan.setDietType(planDTO.getDietType());
+            plan.setTmb(planDTO.getTmb());
+            plan.setCalorieDeficit(planDTO.getCalorieDeficit());
+            plan.setCarbohydrates_g(planDTO.getCarbohydrates_g());
+            plan.setProteins_g(planDTO.getProteins_g());
+            plan.setFats_g(planDTO.getFats_g());
+            plan.setWeightLose(planDTO.getWeightLose());
+            plan.setStatus(planDTO.getStatus() != null ? planDTO.getStatus() : Status.ACTIVED); // Defaulting to ACTIVED if not set
+
+            // Asignar el paciente obtenido al nuevo plan
+            plan.setPacient(pacientOptional.get());
+
+            // Actualizar el estado de planes existentes si es necesario
             List<Plan> existingPlans = planService.findActivedPlanByPacientId(idPacient);
             for (Plan existingPlan : existingPlans) {
                 existingPlan.setStatus(Status.CANCELED);
                 planService.save(existingPlan);
             }
-            if (pacient.isPresent()){
-                plan.setPacient(pacient.get());
-                Plan planNew = planService.save(plan);
-                return ResponseEntity.status(HttpStatus.CREATED).body(planNew);
-            }else
-                return new ResponseEntity<Plan>(HttpStatus.FAILED_DEPENDENCY);
+
+            // Guardar el nuevo plan
+            Plan newPlan = planService.save(plan);
+            return ResponseEntity.status(HttpStatus.CREATED).body(newPlan);
 
         } catch (Exception e) {
-            return new ResponseEntity<Plan>(HttpStatus.INTERNAL_SERVER_ERROR);
-
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+
 
     @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Eliminación de Plan", notes = "Metodo que elimina los datos de Plan")

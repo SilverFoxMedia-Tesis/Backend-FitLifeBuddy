@@ -1,6 +1,7 @@
 package com.fitLifeBuddy.Controller;
 
 import com.fitLifeBuddy.Entity.*;
+import com.fitLifeBuddy.Entity.DTO.DailyDTO;
 import com.fitLifeBuddy.Entity.Enum.Status;
 import com.fitLifeBuddy.Service.IDailyService;
 import com.fitLifeBuddy.Service.IPlanService;
@@ -67,47 +68,46 @@ public class DailyController {
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Actualización de datos de Daily", notes = "Metodo que actualiza los datos de Daily")
-    @ApiResponses({
-            @ApiResponse(code = 200, message = "Datos de Daily actualizados"),
-            @ApiResponse(code = 404, message = "Daily no encontrado")
-    })
-    public ResponseEntity<Daily> updateDaily(
-            @PathVariable("id") Long id, @Valid @RequestBody Daily daily) {
+    public ResponseEntity<Daily> updateDaily(@PathVariable("id") Long id, @Valid @RequestBody DailyDTO dailyDTO) {
         try {
-            Optional<Daily> dailyUp = dailyService.getById(id);
-            if (!dailyUp.isPresent())
-                return new ResponseEntity<Daily>(HttpStatus.NOT_FOUND);
-            daily.setIdDaily(id);
-            dailyService.save(daily);
-            return new ResponseEntity<Daily>(daily, HttpStatus.OK);
+            Optional<Daily> dailyOptional = dailyService.getById(id);
+            if (!dailyOptional.isPresent())
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
+            Daily daily = dailyOptional.get();
+            if (dailyDTO.getDate() != null) daily.setDate(dailyDTO.getDate());
+            if (dailyDTO.getDateNumber() != null) daily.setDateNumber(dailyDTO.getDateNumber());
+            if (dailyDTO.getStatus() != null) daily.setStatus(dailyDTO.getStatus());
+
+            Daily updatedDaily = dailyService.save(daily);
+            return ResponseEntity.ok(updatedDaily);
         } catch (Exception e) {
-            return new ResponseEntity<Daily>(HttpStatus.INTERNAL_SERVER_ERROR);
-
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    @PostMapping(value = "{idPlan}",consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+
+    @PostMapping(value = "/{idPlan}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Registro de Daily", notes = "Método que registra Dailies en BD")
-    @ApiResponses({
-            @ApiResponse(code = 201, message = "Daily creado"),
-            @ApiResponse(code = 404, message = "Daily no creado")
-    })
-    public ResponseEntity<Daily> insertDaily(@PathVariable("idPlan") Long idPlan ,@Valid @RequestBody Daily daily) {
+    public ResponseEntity<Daily> insertDaily(@PathVariable("idPlan") Long idPlan, @Valid @RequestBody DailyDTO dailyDTO) {
         try {
-            Optional<Plan> plan = planService.getById(idPlan);
-            if (plan.isPresent()){
-                daily.setPlan(plan.get());
-                Daily dailyNew = dailyService.save(daily);
-                return ResponseEntity.status(HttpStatus.CREATED).body(dailyNew);
-            }else
-                return new ResponseEntity<Daily>(HttpStatus.FAILED_DEPENDENCY);
+            Optional<Plan> planOptional = planService.getById(idPlan);
+            if (!planOptional.isPresent())
+                return new ResponseEntity<>(HttpStatus.FAILED_DEPENDENCY);
 
+            Daily daily = new Daily();
+            daily.setDate(dailyDTO.getDate());
+            daily.setDateNumber(dailyDTO.getDateNumber());
+            daily.setStatus(dailyDTO.getStatus() != null ? dailyDTO.getStatus() : Status.UNFILLED); // Default to UNFILLED if not set
+            daily.setPlan(planOptional.get());
+
+            Daily newDaily = dailyService.save(daily);
+            return ResponseEntity.status(HttpStatus.CREATED).body(newDaily);
         } catch (Exception e) {
-            return new ResponseEntity<Daily>(HttpStatus.INTERNAL_SERVER_ERROR);
-
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
 
     @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Eliminación de Daily", notes = "Metodo que elimina los datos de Daily")

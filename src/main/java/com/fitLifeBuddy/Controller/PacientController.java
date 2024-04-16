@@ -1,6 +1,7 @@
 package com.fitLifeBuddy.Controller;
 
 import com.fitLifeBuddy.Entity.*;
+import com.fitLifeBuddy.Entity.DTO.PacientDTO;
 import com.fitLifeBuddy.Service.INutritionistService;
 import com.fitLifeBuddy.Service.IPacientService;
 import com.fitLifeBuddy.Service.IPersonService;
@@ -74,49 +75,55 @@ public class PacientController {
         }
     }
 
-    @PostMapping(value = "/{idPerson}/{idNutritionist}",consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/{idPerson}/{idNutritionist}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Registro de Pacients", notes = "Método que registra Pacients en BD")
-    @ApiResponses({
-            @ApiResponse(code = 201, message = "Pacient creado"),
-            @ApiResponse(code = 404, message = "Pacient no creado")
-    })
-    public ResponseEntity<Pacient> insertPacient(@PathVariable("idPerson") Long idPerson, @PathVariable("idNutritionist") Long idNutritionist, @Valid @RequestBody Pacient pacient ) {
+    public ResponseEntity<Pacient> insertPacient(
+            @PathVariable("idPerson") Long idPerson,
+            @PathVariable("idNutritionist") Long idNutritionist,
+            @Valid @RequestBody PacientDTO pacientDTO ) {
+
         try {
             Optional<Person> person = personService.getById(idPerson);
             Optional<Nutritionist> nutritionist = nutritionistService.getById(idNutritionist);
-            if (person.isPresent() && nutritionist.isPresent()) {
-                pacient.setPerson(person.get());
-                pacient.setNutritionist(nutritionist.get());
-                Pacient pacientNew = pacientService.save(pacient);
-                return ResponseEntity.status(HttpStatus.CREATED).body(pacientNew);
-            } else
-                return new ResponseEntity<Pacient>(HttpStatus.FAILED_DEPENDENCY);
-        } catch (Exception e) {
-            return new ResponseEntity<Pacient>(HttpStatus.INTERNAL_SERVER_ERROR);
 
+            if (!person.isPresent() || !nutritionist.isPresent()) {
+                return new ResponseEntity<>(HttpStatus.FAILED_DEPENDENCY);
+            }
+
+            Pacient pacient = new Pacient();
+            pacient.setBirthDate(pacientDTO.getBirthDate());
+            pacient.setPerson(person.get());
+            pacient.setNutritionist(nutritionist.get());
+
+            Pacient pacientNew = pacientService.save(pacient);
+            return ResponseEntity.status(HttpStatus.CREATED).body(pacientNew);
+
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Actualización de datos de Pacient", notes = "Metodo que actualiza los datos de Pacient")
-    @ApiResponses({
-            @ApiResponse(code = 200, message = "Datos de Pacient actualizados"),
-            @ApiResponse(code = 404, message = "Pacient no encontrado")
-    })
-    public ResponseEntity<Pacient> updatePacient(@PathVariable("id") Long id, @Valid @RequestBody Pacient pacient) {
+    @ApiOperation(value = "Actualización de datos de Pacient", notes = "Metodo que actualiza solo la fecha de nacimiento de Pacient")
+    public ResponseEntity<PacientDTO> updatePacient(@PathVariable("id") Long id, @Valid @RequestBody PacientDTO pacientDTO) {
         try {
-            Optional<Pacient> pacientUp = pacientService.getById(id);
-            if (!pacientUp.isPresent())
-                return new ResponseEntity<Pacient>(HttpStatus.NOT_FOUND);
-            pacient.setIdPacient(id);
+            Optional<Pacient> pacientOpt = pacientService.getById(id);
+            if (!pacientOpt.isPresent())
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+            Pacient pacient = pacientOpt.get();
+            pacient.setBirthDate(pacientDTO.getBirthDate());
+
             pacientService.save(pacient);
-            return new ResponseEntity<Pacient>(pacient, HttpStatus.OK);
 
+            return new ResponseEntity<>(pacientDTO, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<Pacient>(HttpStatus.INTERNAL_SERVER_ERROR);
-
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+
 
     @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Eliminación de Pacient", notes = "Metodo que elimina los datos de Pacient")
