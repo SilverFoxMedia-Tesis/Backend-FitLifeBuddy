@@ -31,22 +31,20 @@ public class PacientHistoryController {
     private IPacientService pacientService;
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Listar PacientHistories", notes = "Metodo para listar a todos los PacientHistories")
+    @ApiOperation(value = "Listar PacientHistories", notes = "Método para listar a todos los PacientHistories")
     @ApiResponses({
-            @ApiResponse(code = 201, message = "PacientHistories encontrados"),
-            @ApiResponse(code = 404, message = "PacientHistories no encontrados")
+            @ApiResponse(code = 200, message = "PacientHistories encontrados o lista vacía"),
+            @ApiResponse(code = 500, message = "Error interno del servidor")
     })
     public ResponseEntity<List<PacientHistory>> findAll(){
         try {
             List<PacientHistory> pacientHistories = pacientHistoryService.getAll();
-            if (pacientHistories.size() > 0)
-                return new ResponseEntity<List<PacientHistory>>(pacientHistories, HttpStatus.OK);
-            else
-                return new ResponseEntity<List<PacientHistory>>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<List<PacientHistory>>(pacientHistories, HttpStatus.OK);
         } catch (Exception ex){
             return new ResponseEntity<List<PacientHistory>>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Buscar PacientHistory por Id", notes = "Métodos para encontrar un PacientHistory por su respectivo Id")

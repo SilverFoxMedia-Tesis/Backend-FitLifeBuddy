@@ -33,28 +33,27 @@ public class HealthConditionController {
     IPacientService pacientService;
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Listar HealthConditions", notes = "Metodo para listar a todos los HealthConditions")
+    @ApiOperation(value = "Listar HealthConditions", notes = "Método para listar a todos los HealthConditions")
     @ApiResponses({
-            @ApiResponse(code = 201, message = "HealthConditions encontrados"),
-            @ApiResponse(code = 404, message = "HealthConditions no encontrados")
+            @ApiResponse(code = 200, message = "HealthConditions encontrados o lista vacía"),
+            @ApiResponse(code = 500, message = "Error interno del servidor")
     })
     public ResponseEntity<List<HealthCondition>> findAll(){
         try {
             List<HealthCondition> healthConditions = healthConditionService.getAll();
-            if (healthConditions.size() > 0)
-                return new ResponseEntity<List<HealthCondition>>(healthConditions, HttpStatus.OK);
-            else
-                return new ResponseEntity<List<HealthCondition>>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<List<HealthCondition>>(healthConditions, HttpStatus.OK);
         } catch (Exception ex){
             return new ResponseEntity<List<HealthCondition>>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
+
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Buscar HealthCondition por Id", notes = "Métodos para encontrar un HealthCondition por su respectivo Id")
     @ApiResponses({
-            @ApiResponse(code = 201, message = "HealthCondition encontrado"),
-            @ApiResponse(code = 404, message = "HealthCondition no encontrado")
+            @ApiResponse(code = 200, message = "HealthCondition encontrado"),
+            @ApiResponse(code = 404, message = "HealthCondition no encontrado"),
+            @ApiResponse(code = 500, message = "Error interno del servidor")
     })
     public ResponseEntity<HealthCondition> findById(@PathVariable("id") Long id) {
         try {
@@ -66,6 +65,7 @@ public class HealthConditionController {
             return new ResponseEntity<HealthCondition>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Actualización de datos de HealthCondition", notes = "Metodo que actualiza los datos de HealthCondition")
@@ -132,40 +132,32 @@ public class HealthConditionController {
     @GetMapping("searchByNameHealthCondition/{nameHealthCondition}")
     @ApiOperation(value = "Buscar HealthCondition por nameHealthCondition", notes = "Métodos para encontrar un HealthCondition por su respectivo nameHealthCondition")
     @ApiResponses({
-            @ApiResponse(code = 201, message = "HealthCondition encontrados"),
-            @ApiResponse(code = 404, message = "HealthCondition no encontrados")
+            @ApiResponse(code = 200, message = "HealthCondition encontrados o no existen HealthConditions con ese nombre"),
+            @ApiResponse(code = 500, message = "Error interno del servidor")
     })
     public ResponseEntity<List<HealthCondition>> findByNameHealthCondition(@PathVariable("nameHealthCondition") String nameHealthCondition) {
         try {
             List<HealthCondition> healthConditions = healthConditionService.findByNameHealthCondition(nameHealthCondition);
-            if (healthConditions.size() > 0)
-                return new ResponseEntity<List<HealthCondition>>(healthConditions, HttpStatus.OK);
-            else
-                return new ResponseEntity<List<HealthCondition>>(HttpStatus.NOT_FOUND);
-
+            return new ResponseEntity<List<HealthCondition>>(healthConditions, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<List<HealthCondition>>(HttpStatus.INTERNAL_SERVER_ERROR);
-
         }
     }
+
 
     @GetMapping("searchByTypeHealthCondition/{typeHealthCondition}")
-    @ApiOperation(value = "Buscar HealthCondition por typeHealthCondition", notes = "Métodos para encontrar un FoodCondition por su respectivo typeFoodCondition")
+    @ApiOperation(value = "Buscar HealthCondition por typeHealthCondition", notes = "Métodos para encontrar un HealthCondition por su respectivo typeHealthCondition")
     @ApiResponses({
-            @ApiResponse(code = 201, message = "HealthCondition encontrados"),
-            @ApiResponse(code = 404, message = "HealthCondition no encontrados")
+            @ApiResponse(code = 200, message = "HealthConditions encontrados o lista vacía"),
+            @ApiResponse(code = 500, message = "Error interno del servidor")
     })
-    public ResponseEntity<List<HealthCondition>> findByTypeFoodCondition(@PathVariable("typeFoodCondition") TypeHealthCondition typeHealthCondition) {
+    public ResponseEntity<List<HealthCondition>> findByTypeHealthCondition(@PathVariable("typeHealthCondition") TypeHealthCondition typeHealthCondition) {
         try {
             List<HealthCondition> healthConditions = healthConditionService.findByTypeHealthCondition(typeHealthCondition);
-            if (healthConditions.size() > 0)
-                return new ResponseEntity<List<HealthCondition>>(healthConditions, HttpStatus.OK);
-            else
-                return new ResponseEntity<List<HealthCondition>>(HttpStatus.NOT_FOUND);
-
+            return new ResponseEntity<List<HealthCondition>>(healthConditions, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<List<HealthCondition>>(HttpStatus.INTERNAL_SERVER_ERROR);
-
         }
     }
+
 }

@@ -30,22 +30,20 @@ public class RoutineController {
     private IDailyService dailyService;
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Listar Meals", notes = "Metodo para listar a todos los Meals")
+    @ApiOperation(value = "Listar Routines", notes = "Método para listar a todos los Routines")
     @ApiResponses({
-            @ApiResponse(code = 201, message = "Meals encontrados"),
-            @ApiResponse(code = 404, message = "Meals no encontrados")
+            @ApiResponse(code = 200, message = "Routines encontrados o lista vacía"),
+            @ApiResponse(code = 500, message = "Error interno del servidor")
     })
     public ResponseEntity<List<Routine>> findAll(){
         try {
             List<Routine> routines = routineService.getAll();
-            if (routines.size() > 0)
-                return new ResponseEntity<List<Routine>>(routines, HttpStatus.OK);
-            else
-                return new ResponseEntity<List<Routine>>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<List<Routine>>(routines, HttpStatus.OK);
         } catch (Exception ex){
             return new ResponseEntity<List<Routine>>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Buscar Routine por Id", notes = "Métodos para encontrar un Routine por su respectivo Id")

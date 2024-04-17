@@ -31,22 +31,20 @@ public class DailyController {
     private IPlanService planService;
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Listar Dailies", notes = "Metodo para listar a todos los Dailies")
+    @ApiOperation(value = "Listar Dailies", notes = "Método para listar a todos los Dailies")
     @ApiResponses({
-            @ApiResponse(code = 201, message = "Dailies encontrados"),
-            @ApiResponse(code = 404, message = "Dailies no encontrados")
+            @ApiResponse(code = 200, message = "Dailies encontrados o lista vacía"),
+            @ApiResponse(code = 500, message = "Error interno del servidor")
     })
     public ResponseEntity<List<Daily>> findAll(){
         try {
             List<Daily> dailies = dailyService.getAll();
-            if (dailies.size() > 0)
-                return new ResponseEntity<List<Daily>>(dailies, HttpStatus.OK);
-            else
-                return new ResponseEntity<List<Daily>>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<List<Daily>>(dailies, HttpStatus.OK);
         } catch (Exception ex){
             return new ResponseEntity<List<Daily>>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Buscar Daily por Id", notes = "Métodos para encontrar un Daily por su respectivo Id")
@@ -130,62 +128,50 @@ public class DailyController {
     @GetMapping("searchByDate/{date}")
     @ApiOperation(value = "Buscar Daily por date", notes = "Métodos para encontrar un Daily por su respectivo date")
     @ApiResponses({
-            @ApiResponse(code = 201, message = "Dailies encontrados"),
-            @ApiResponse(code = 404, message = "Dailies no encontrados")
+            @ApiResponse(code = 200, message = "Dailies encontrados o no existen Dailies para esta fecha"),
+            @ApiResponse(code = 500, message = "Error interno del servidor")
     })
     public ResponseEntity<List<Daily>> findByDate(@PathVariable("date") Date date) {
         try {
             List<Daily> dailies = dailyService.findByDate(date);
-            if (dailies.size() > 0)
-                return new ResponseEntity<List<Daily>>(dailies, HttpStatus.OK);
-            else
-                return new ResponseEntity<List<Daily>>(HttpStatus.NOT_FOUND);
-
+            return new ResponseEntity<List<Daily>>(dailies, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<List<Daily>>(HttpStatus.INTERNAL_SERVER_ERROR);
-
         }
     }
+
 
     @GetMapping("searchMealsByIdDaily/{idDaily}")
     @ApiOperation(value = "Buscar Meals por Daily", notes = "Métodos para encontrar un Meal por su respectivo Daily")
     @ApiResponses({
-            @ApiResponse(code = 201, message = "Meals encontrados"),
-            @ApiResponse(code = 404, message = "Meals no encontrados")
+            @ApiResponse(code = 200, message = "Meals encontrados o lista vacía"),
+            @ApiResponse(code = 500, message = "Error interno del servidor")
     })
     public ResponseEntity<List<Meal>> findMealsByIdDaily(@PathVariable("idDaily") Long idDaily) {
         try {
             List<Meal> meals = dailyService.findMealsByIdDaily(idDaily);
-            if (meals.size() > 0)
-                return new ResponseEntity<List<Meal>>(meals, HttpStatus.OK);
-            else
-                return new ResponseEntity<List<Meal>>(HttpStatus.NOT_FOUND);
-
+            return new ResponseEntity<List<Meal>>(meals, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<List<Meal>>(HttpStatus.INTERNAL_SERVER_ERROR);
-
         }
     }
+
 
     @GetMapping("searchRoutinesByIdDaily/{idDaily}")
     @ApiOperation(value = "Buscar Routines por Daily", notes = "Métodos para encontrar un Routine por su respectivo Daily")
     @ApiResponses({
-            @ApiResponse(code = 201, message = "Routines encontrados"),
-            @ApiResponse(code = 404, message = "Routines no encontrados")
+            @ApiResponse(code = 200, message = "Routines encontrados o lista vacía"),
+            @ApiResponse(code = 500, message = "Error interno del servidor")
     })
     public ResponseEntity<List<Routine>> findRoutinesByIdDaily(@PathVariable("idDaily") Long idDaily) {
         try {
             List<Routine> routines = dailyService.findRoutinesByIdDaily(idDaily);
-            if (routines.size() > 0)
-                return new ResponseEntity<List<Routine>>(routines, HttpStatus.OK);
-            else
-                return new ResponseEntity<List<Routine>>(HttpStatus.NOT_FOUND);
-
+            return new ResponseEntity<List<Routine>>(routines, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<List<Routine>>(HttpStatus.INTERNAL_SERVER_ERROR);
-
         }
     }
+
 
     @PostMapping("/completeToday")
     @ApiOperation(value = "Completar Daily de Hoy", notes = "Marca el Daily de hoy como completado si su estado es UNFILLED")

@@ -35,22 +35,20 @@ public class RoutineExerciseController {
     private IExerciseService exerciseService;
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Listar RoutineExercises", notes = "Metodo para listar a todos los RoutineExercises")
+    @ApiOperation(value = "Listar RoutineExercises", notes = "Método para listar a todos los RoutineExercises")
     @ApiResponses({
-            @ApiResponse(code = 201, message = "RoutineExercises encontrados"),
-            @ApiResponse(code = 404, message = "RoutineExercises no encontrados")
+            @ApiResponse(code = 200, message = "RoutineExercises encontrados o lista vacía"),
+            @ApiResponse(code = 500, message = "Error interno del servidor")
     })
     public ResponseEntity<List<RoutineExercise>> findAll(){
         try {
             List<RoutineExercise> routineExercises = routineExerciseService.getAll();
-            if (routineExercises.size() > 0)
-                return new ResponseEntity<List<RoutineExercise>>(routineExercises, HttpStatus.OK);
-            else
-                return new ResponseEntity<List<RoutineExercise>>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<List<RoutineExercise>>(routineExercises, HttpStatus.OK);
         } catch (Exception ex){
             return new ResponseEntity<List<RoutineExercise>>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Buscar RoutineExercise por Id", notes = "Métodos para encontrar un RoutineExercise por su respectivo Id")

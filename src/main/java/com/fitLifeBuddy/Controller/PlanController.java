@@ -34,22 +34,20 @@ public class PlanController {
     private IPacientService pacientService;
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Listar Plans", notes = "Metodo para listar a todos los Plans")
+    @ApiOperation(value = "Listar Plans", notes = "Método para listar a todos los Plans")
     @ApiResponses({
-            @ApiResponse(code = 201, message = "Plans encontrados"),
-            @ApiResponse(code = 404, message = "Plans no encontrados")
+            @ApiResponse(code = 200, message = "Plans encontrados o lista vacía"),
+            @ApiResponse(code = 500, message = "Error interno del servidor")
     })
     public ResponseEntity<List<Plan>> findAll(){
         try {
             List<Plan> plans = planService.getAll();
-            if (plans.size() > 0)
-                return new ResponseEntity<List<Plan>>(plans, HttpStatus.OK);
-            else
-                return new ResponseEntity<List<Plan>>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<List<Plan>>(plans, HttpStatus.OK);
         } catch (Exception ex){
             return new ResponseEntity<List<Plan>>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Buscar Plan por Id", notes = "Métodos para encontrar un Plan por su respectivo Id")
@@ -138,60 +136,47 @@ public class PlanController {
     @GetMapping("searchDailiesByIdPlan/{idPlan}")
     @ApiOperation(value = "Buscar Dailies por Plan", notes = "Métodos para encontrar Dailies por su respectivo Plan")
     @ApiResponses({
-            @ApiResponse(code = 201, message = "Dailies encontrados"),
-            @ApiResponse(code = 404, message = "Dailies no encontrados")
+            @ApiResponse(code = 200, message = "Dailies encontrados o no existen Dailies para este Plan"),
+            @ApiResponse(code = 500, message = "Error interno del servidor")
     })
     public ResponseEntity<List<Daily>> findDailiesByIdPlan(@PathVariable("idPlan") Long idPlan) {
         try {
             List<Daily> dailies = planService.findDailiesByIdPlan(idPlan);
-            if (dailies.size() > 0)
-                return new ResponseEntity<List<Daily>>(dailies, HttpStatus.OK);
-            else
-                return new ResponseEntity<List<Daily>>(HttpStatus.NOT_FOUND);
-
+            return new ResponseEntity<List<Daily>>(dailies, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<List<Daily>>(HttpStatus.INTERNAL_SERVER_ERROR);
-
         }
     }
+
 
     @GetMapping("searchByFrecuently/{frecuently}")
     @ApiOperation(value = "Buscar Plans por frecuently", notes = "Métodos para encontrar Plans por su respectivo frecuently")
     @ApiResponses({
-            @ApiResponse(code = 201, message = "Plans encontrados"),
-            @ApiResponse(code = 404, message = "Plans no encontrados")
+            @ApiResponse(code = 200, message = "Plans encontrados o no existen Plans con esta frecuencia"),
+            @ApiResponse(code = 500, message = "Error interno del servidor")
     })
     public ResponseEntity<List<Plan>> findByFrecuently(@PathVariable("frecuently") Frecuently frecuently) {
         try {
             List<Plan> plans = planService.findByFrecuently(frecuently);
-            if (plans.size() > 0)
-                return new ResponseEntity<List<Plan>>(plans, HttpStatus.OK);
-            else
-                return new ResponseEntity<List<Plan>>(HttpStatus.NOT_FOUND);
-
+            return new ResponseEntity<List<Plan>>(plans, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<List<Plan>>(HttpStatus.INTERNAL_SERVER_ERROR);
-
         }
     }
 
     @GetMapping("searchByDietType/{dietType}")
     @ApiOperation(value = "Buscar Plans por dietType", notes = "Métodos para encontrar Plans por su respectivo dietType")
     @ApiResponses({
-            @ApiResponse(code = 201, message = "Plans encontrados"),
-            @ApiResponse(code = 404, message = "Plans no encontrados")
+            @ApiResponse(code = 200, message = "Plans encontrados o no existen Plans para este tipo de dieta"),
+            @ApiResponse(code = 500, message = "Error interno del servidor")
     })
     public ResponseEntity<List<Plan>> findByDietType(@PathVariable("dietType") DietType dietType) {
         try {
             List<Plan> plans = planService.findByDietType(dietType);
-            if (plans.size() > 0)
-                return new ResponseEntity<List<Plan>>(plans, HttpStatus.OK);
-            else
-                return new ResponseEntity<List<Plan>>(HttpStatus.NOT_FOUND);
-
+            return new ResponseEntity<List<Plan>>(plans, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<List<Plan>>(HttpStatus.INTERNAL_SERVER_ERROR);
-
         }
     }
+
 }
