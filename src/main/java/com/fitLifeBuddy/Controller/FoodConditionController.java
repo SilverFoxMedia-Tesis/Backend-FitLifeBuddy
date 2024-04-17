@@ -34,26 +34,24 @@ public class FoodConditionController {
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Listar FoodConditions", notes = "Metodo para listar a todos los FoodConditions")
     @ApiResponses({
-            @ApiResponse(code = 201, message = "FoodConditions encontrados"),
-            @ApiResponse(code = 404, message = "FoodConditions no encontrados")
+            @ApiResponse(code = 200, message = "FoodConditions encontrados o no existen FoodConditions"),
+            @ApiResponse(code = 500, message = "Error interno del servidor")
     })
     public ResponseEntity<List<FoodCondition>> findAll(){
         try {
             List<FoodCondition> foodConditions = foodConditionService.getAll();
-            if (foodConditions.size() > 0)
-                return new ResponseEntity<List<FoodCondition>>(foodConditions, HttpStatus.OK);
-            else
-                return new ResponseEntity<List<FoodCondition>>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<List<FoodCondition>>(foodConditions, HttpStatus.OK);
         } catch (Exception ex){
             return new ResponseEntity<List<FoodCondition>>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Buscar FoodCondition por Id", notes = "Métodos para encontrar un FoodCondition por su respectivo Id")
+    @ApiOperation(value = "Buscar FoodCondition por Id", notes = "Método para encontrar un FoodCondition por su respectivo Id")
     @ApiResponses({
-            @ApiResponse(code = 201, message = "FoodCondition encontrado"),
-            @ApiResponse(code = 404, message = "FoodCondition no encontrado")
+            @ApiResponse(code = 200, message = "FoodCondition encontrado"),
+            @ApiResponse(code = 404, message = "FoodCondition no encontrado"),
+            @ApiResponse(code = 500, message = "Error interno del servidor")
     })
     public ResponseEntity<FoodCondition> findById(@PathVariable("id") Long id) {
         try {
@@ -65,6 +63,7 @@ public class FoodConditionController {
             return new ResponseEntity<FoodCondition>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Actualización de datos de FoodCondition", notes = "Metodo que actualiza los datos de FoodCondition")
@@ -131,40 +130,31 @@ public class FoodConditionController {
     @GetMapping("searchByNameFoodCondition/{nameFoodContidion}")
     @ApiOperation(value = "Buscar FoodCondition por nameFoodContidion", notes = "Métodos para encontrar un FoodCondition por su respectivo nameFoodContidion")
     @ApiResponses({
-            @ApiResponse(code = 201, message = "FoodCondition encontrados"),
-            @ApiResponse(code = 404, message = "FoodCondition no encontrados")
+            @ApiResponse(code = 200, message = "FoodCondition encontrados o no existen FoodConditions con ese nombre"),
+            @ApiResponse(code = 500, message = "Error interno del servidor")
     })
     public ResponseEntity<List<FoodCondition>> findByNameFoodCondition(@PathVariable("nameFoodContidion") String nameFoodContidion) {
         try {
             List<FoodCondition> foodConditions = foodConditionService.findByNameFoodCondition(nameFoodContidion);
-            if (foodConditions.size() > 0)
-                return new ResponseEntity<List<FoodCondition>>(foodConditions, HttpStatus.OK);
-            else
-                return new ResponseEntity<List<FoodCondition>>(HttpStatus.NOT_FOUND);
-
+            return new ResponseEntity<List<FoodCondition>>(foodConditions, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<List<FoodCondition>>(HttpStatus.INTERNAL_SERVER_ERROR);
-
         }
     }
 
     @GetMapping("searchByTypeFoodCondition/{typeFoodCondition}")
     @ApiOperation(value = "Buscar FoodCondition por typeFoodCondition", notes = "Métodos para encontrar un FoodCondition por su respectivo typeFoodCondition")
     @ApiResponses({
-            @ApiResponse(code = 201, message = "FoodCondition encontrados"),
-            @ApiResponse(code = 404, message = "FoodCondition no encontrados")
+            @ApiResponse(code = 200, message = "FoodCondition encontrados o no existen FoodConditions de este tipo"),
+            @ApiResponse(code = 500, message = "Error interno del servidor")
     })
     public ResponseEntity<List<FoodCondition>> findByTypeFoodCondition(@PathVariable("typeFoodCondition") TypeFoodCondition typeFoodCondition) {
         try {
             List<FoodCondition> foodConditions = foodConditionService.findByTypeFoodCondition(typeFoodCondition);
-            if (foodConditions.size() > 0)
-                return new ResponseEntity<List<FoodCondition>>(foodConditions, HttpStatus.OK);
-            else
-                return new ResponseEntity<List<FoodCondition>>(HttpStatus.NOT_FOUND);
-
+            return new ResponseEntity<List<FoodCondition>>(foodConditions, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<List<FoodCondition>>(HttpStatus.INTERNAL_SERVER_ERROR);
-
         }
     }
+
 }
