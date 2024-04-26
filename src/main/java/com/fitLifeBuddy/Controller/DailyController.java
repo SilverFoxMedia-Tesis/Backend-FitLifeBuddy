@@ -125,6 +125,21 @@ public class DailyController {
         }
     }
 
+    @GetMapping("/searchByDateAndPatient/{date}/{idPacient}")
+    @ApiOperation(value = "Buscar Daily por fecha y ID de paciente", notes = "Métodos para encontrar un Daily por fecha y el ID del paciente asociado")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Dailies encontrados o no existen Dailies para esta fecha e ID de paciente"),
+            @ApiResponse(code = 500, message = "Error interno del servidor")
+    })
+    public ResponseEntity<List<Daily>> findByDateAndPatientId(@PathVariable("date") Date date, @PathVariable("idPacient") Long idPacient) {
+        try {
+            List<Daily> dailies = dailyService.findByDateAndPatientId(date, idPacient);
+            return new ResponseEntity<>(dailies, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     @GetMapping("searchByDate/{date}")
     @ApiOperation(value = "Buscar Daily por date", notes = "Métodos para encontrar un Daily por su respectivo date")
     @ApiResponses({

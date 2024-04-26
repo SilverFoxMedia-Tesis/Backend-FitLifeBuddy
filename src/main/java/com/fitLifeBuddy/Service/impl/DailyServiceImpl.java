@@ -44,6 +44,11 @@ public class DailyServiceImpl implements IDailyService {
     }
 
     @Override
+    public List<Daily> findByDateAndPatientId(Date date, Long idPacient) throws Exception {
+        return dailyRepository.findByDateAndPatientId(date, idPacient);
+    }
+
+    @Override
     public List<Daily> findByDate(Date date) throws Exception {
         return dailyRepository.findByDate(date);
     }
