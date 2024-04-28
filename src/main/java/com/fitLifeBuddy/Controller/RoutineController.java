@@ -90,18 +90,19 @@ public class RoutineController {
             @ApiResponse(code = 201, message = "Routine creado"),
             @ApiResponse(code = 404, message = "Routine no creado")
     })
-    public ResponseEntity<Routine> insertRoutine(@PathVariable("idDaily") Long idDaily, @Valid @RequestBody Routine routine) {
+    public ResponseEntity<?> insertRoutine(@PathVariable("idDaily") Long idDaily) {
         try {
             Optional<Daily> daily = dailyService.getById(idDaily);
-            if (daily.isPresent()) {
-                routine.setDaily(daily.get());
+            if (daily.isPresent()){
+                Routine routine = new Routine();
+                routine.setDaily(daily.get()); // Asocia el Daily encontrado
                 Routine routineNew = routineService.save(routine);
                 return ResponseEntity.status(HttpStatus.CREATED).body(routineNew);
             } else
-                return new ResponseEntity<Routine>(HttpStatus.FAILED_DEPENDENCY);
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND); // Cambio a NOT_FOUND (404) para indicar que Daily no se encontró
 
         } catch (Exception e) {
-            return new ResponseEntity<Routine>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

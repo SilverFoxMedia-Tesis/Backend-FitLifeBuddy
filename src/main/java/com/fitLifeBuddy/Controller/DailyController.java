@@ -1,6 +1,7 @@
 package com.fitLifeBuddy.Controller;
 
 import com.fitLifeBuddy.Entity.*;
+import com.fitLifeBuddy.Entity.DTO.DailyDTO;
 import com.fitLifeBuddy.Entity.Enum.Status;
 import com.fitLifeBuddy.Service.IDailyService;
 import com.fitLifeBuddy.Service.IPlanService;
@@ -91,10 +92,13 @@ public class DailyController {
             @ApiResponse(code = 201, message = "Daily creado"),
             @ApiResponse(code = 404, message = "Daily no creado")
     })
-    public ResponseEntity<Daily> insertDaily(@PathVariable("idPlan") Long idPlan ,@Valid @RequestBody Daily daily) {
+    public ResponseEntity<Daily> insertDaily(@PathVariable("idPlan") Long idPlan ,@Valid @RequestBody DailyDTO dailyDTO) {
         try {
             Optional<Plan> plan = planService.getById(idPlan);
             if (plan.isPresent()){
+                Daily daily = new Daily();
+                daily.setDate((dailyDTO.getDate()));
+                daily.setDateNumber(dailyDTO.getDateNumber());
                 daily.setPlan(plan.get());
                 Daily dailyNew = dailyService.save(daily);
                 return ResponseEntity.status(HttpStatus.CREATED).body(dailyNew);

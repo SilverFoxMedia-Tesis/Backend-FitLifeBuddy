@@ -34,6 +34,7 @@ D:\Escritorio\2023-02\Backend\Backend-FitLifeBuddy\src\main\java\com\fitLifeBudd
 D:\Escritorio\2023-02\Backend\Backend-FitLifeBuddy\src\main\java\com\fitLifeBuddy\Entity\RoutineExercise.java
 D:\Escritorio\2023-02\Backend\Backend-FitLifeBuddy\src\main\java\com\fitLifeBuddy\Repository\IFoodConditionRepository.java
 D:\Escritorio\2023-02\Backend\Backend-FitLifeBuddy\src\main\java\com\fitLifeBuddy\Entity\FoodCondition.java
+D:\Escritorio\2023-02\Backend\Backend-FitLifeBuddy\src\main\java\com\fitLifeBuddy\Entity\Enum\TimeMeal.java
 D:\Escritorio\2023-02\Backend\Backend-FitLifeBuddy\src\main\java\com\fitLifeBuddy\Service\IPlanService.java
 D:\Escritorio\2023-02\Backend\Backend-FitLifeBuddy\src\main\java\com\fitLifeBuddy\Entity\Plan.java
 D:\Escritorio\2023-02\Backend\Backend-FitLifeBuddy\src\main\java\com\fitLifeBuddy\Repository\IMealFoodRepository.java
@@ -41,6 +42,7 @@ D:\Escritorio\2023-02\Backend\Backend-FitLifeBuddy\src\main\java\com\fitLifeBudd
 D:\Escritorio\2023-02\Backend\Backend-FitLifeBuddy\src\main\java\com\fitLifeBuddy\Service\impl\HealthConditionServiceImpl.java
 D:\Escritorio\2023-02\Backend\Backend-FitLifeBuddy\src\main\java\com\fitLifeBuddy\Entity\Person.java
 D:\Escritorio\2023-02\Backend\Backend-FitLifeBuddy\src\main\java\com\fitLifeBuddy\Service\IQuestionService.java
+D:\Escritorio\2023-02\Backend\Backend-FitLifeBuddy\src\main\java\com\fitLifeBuddy\Entity\DTO\DailyDTO.java
 D:\Escritorio\2023-02\Backend\Backend-FitLifeBuddy\src\main\java\com\fitLifeBuddy\Service\IRoutineExerciseService.java
 D:\Escritorio\2023-02\Backend\Backend-FitLifeBuddy\src\main\java\com\fitLifeBuddy\Entity\Enum\CategoryName.java
 D:\Escritorio\2023-02\Backend\Backend-FitLifeBuddy\src\main\java\com\fitLifeBuddy\Controller\PlanController.java
@@ -57,6 +59,7 @@ D:\Escritorio\2023-02\Backend\Backend-FitLifeBuddy\src\main\java\com\fitLifeBudd
 D:\Escritorio\2023-02\Backend\Backend-FitLifeBuddy\src\main\java\com\fitLifeBuddy\Entity\MealFood.java
 D:\Escritorio\2023-02\Backend\Backend-FitLifeBuddy\src\main\java\com\fitLifeBuddy\Repository\IFoodRepository.java
 D:\Escritorio\2023-02\Backend\Backend-FitLifeBuddy\src\main\java\com\fitLifeBuddy\Repository\INutritionistRepository.java
+D:\Escritorio\2023-02\Backend\Backend-FitLifeBuddy\src\main\java\com\fitLifeBuddy\Entity\DTO\MealDTO.java
 D:\Escritorio\2023-02\Backend\Backend-FitLifeBuddy\src\main\java\com\fitLifeBuddy\Entity\Enum\Gender.java
 D:\Escritorio\2023-02\Backend\Backend-FitLifeBuddy\src\main\java\com\fitLifeBuddy\Controller\FeedbackController.java
 D:\Escritorio\2023-02\Backend\Backend-FitLifeBuddy\src\main\java\com\fitLifeBuddy\Entity\Nutritionist.java

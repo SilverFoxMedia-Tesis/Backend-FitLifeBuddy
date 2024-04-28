@@ -1,6 +1,7 @@
 package com.fitLifeBuddy.Controller;
 
 import com.fitLifeBuddy.Entity.*;
+import com.fitLifeBuddy.Entity.DTO.MealDTO;
 import com.fitLifeBuddy.Service.IDailyService;
 import com.fitLifeBuddy.Service.IFoodService;
 import com.fitLifeBuddy.Service.IMealService;
@@ -94,18 +95,20 @@ public class MealController {
             @ApiResponse(code = 201, message = "Meal creado"),
             @ApiResponse(code = 400, message = "Información inválida o incompleta para crear el Meal")
     })
-    public ResponseEntity<Meal> insertMeal(@PathVariable("idDaily") Long idDaily,@Valid @RequestBody Meal meal) {
+    public ResponseEntity<?> insertMeal(@PathVariable("idDaily") Long idDaily, @Valid @RequestBody MealDTO mealDTO) {
         try {
             Optional<Daily> daily = dailyService.getById(idDaily);
             if (daily.isPresent()){
-                meal.setDaily(daily.get());
+                Meal meal = new Meal();
+                meal.setTimeMeal(mealDTO.getTimeMeal()); // Setea el valor de timeMeal desde el DTO
+                meal.setDaily(daily.get()); // Asocia el Daily correspondiente
                 Meal mealNew = mealService.save(meal);
                 return ResponseEntity.status(HttpStatus.CREATED).body(mealNew);
             } else
-                return new ResponseEntity<Meal>(HttpStatus.FAILED_DEPENDENCY);
+                return new ResponseEntity<>(HttpStatus.FAILED_DEPENDENCY);
 
         } catch (Exception e) {
-            return new ResponseEntity<Meal>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

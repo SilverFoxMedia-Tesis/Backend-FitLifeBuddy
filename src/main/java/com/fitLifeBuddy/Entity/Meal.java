@@ -2,6 +2,7 @@ package com.fitLifeBuddy.Entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fitLifeBuddy.Entity.Enum.TimeMeal;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,10 +21,9 @@ public class Meal implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idMeal;
-    @Column(name = "NameMeal", nullable = false, length = 20)
-    private String nameMeal;
-    @Column(name = "DescriptionMeal", nullable = false, length = 100)
-    private String descriptionMeal;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "TimeMeal", nullable = false, length = 10)
+    private TimeMeal timeMeal;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "idDaily", nullable = false)

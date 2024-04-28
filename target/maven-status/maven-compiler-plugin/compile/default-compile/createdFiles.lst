@@ -38,12 +38,14 @@ com\fitLifeBuddy\Service\impl\NutriotionistServiceImpl.class
 com\fitLifeBuddy\Service\IOptionService.class
 com\fitLifeBuddy\Repository\IFoodConditionRepository.class
 com\fitLifeBuddy\Service\impl\FoodServiceImpl.class
+com\fitLifeBuddy\Entity\Enum\TimeMeal.class
 com\fitLifeBuddy\Service\IHealthConditionService.class
 com\fitLifeBuddy\Service\IDailyService.class
 com\fitLifeBuddy\Entity\Feedback.class
 com\fitLifeBuddy\Service\impl\PacientHistoryServiceImpl.class
 com\fitLifeBuddy\Service\IMealService.class
 com\fitLifeBuddy\Repository\IPlanRepository.class
+com\fitLifeBuddy\Entity\DTO\DailyDTO.class
 com\fitLifeBuddy\Entity\Pacient.class
 com\fitLifeBuddy\Entity\Person.class
 com\fitLifeBuddy\Controller\ExerciseController.class
@@ -74,6 +76,7 @@ com\fitLifeBuddy\Entity\Enum\Status.class
 com\fitLifeBuddy\Service\impl\PersonServiceImpl.class
 com\fitLifeBuddy\Service\impl\MealServiceImpl.class
 com\fitLifeBuddy\Repository\IRoutineRepository.class
+com\fitLifeBuddy\Entity\DTO\MealDTO.class
 com\fitLifeBuddy\Repository\IExerciseRepository.class
 com\fitLifeBuddy\Entity\Enum\Frecuently.class
 com\fitLifeBuddy\Service\IMealFoodService.class
