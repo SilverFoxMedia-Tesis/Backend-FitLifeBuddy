@@ -11,7 +11,6 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 @Repository
 public interface IMealRepository extends JpaRepository<Meal, Long> {
-    public List<Meal> findByNameMeal(String nameMeal);
 
     @Query("select mf from MealFood mf where mf.meal.idMeal =:mealId")
     public List<MealFood> findMealFoodsByIdMeal(@Param("mealId")Long idMeal);

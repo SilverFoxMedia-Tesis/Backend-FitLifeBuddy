@@ -42,11 +42,6 @@ public class MealServiceImpl implements IMealService {
     }
 
     @Override
-    public List<Meal> findByNameMeal(String nameMeal) throws Exception {
-        return mealRepository.findByNameMeal(nameMeal);
-    }
-
-    @Override
     public List<MealFood> findMealFoodsByIdMeal(Long idMeal) throws Exception {
         return mealRepository.findMealFoodsByIdMeal(idMeal);
     }

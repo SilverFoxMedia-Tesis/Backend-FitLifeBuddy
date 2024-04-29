@@ -131,25 +131,6 @@ public class MealController {
         }
     }
 
-    @GetMapping("searchByNameMeal/{nameMeal}")
-    @ApiOperation(value = "Buscar Meal por nameMeal", notes = "Métodos para encontrar Meals por su respectivo nameMeal")
-    @ApiResponses({
-            @ApiResponse(code = 201, message = "Meals encontrados"),
-            @ApiResponse(code = 404, message = "Meals no encontrados")
-    })
-    public ResponseEntity<List<Meal>> findByNameMeal(@PathVariable("nameMeal") String nameMeal) {
-        try {
-            List<Meal> meals = mealService.findByNameMeal(nameMeal);
-            if (meals.size() > 0)
-                return new ResponseEntity<List<Meal>>(meals, HttpStatus.OK);
-            else
-                return new ResponseEntity<List<Meal>>(HttpStatus.NOT_FOUND);
-
-        } catch (Exception e) {
-            return new ResponseEntity<List<Meal>>(HttpStatus.INTERNAL_SERVER_ERROR);
-
-        }
-    }
     @GetMapping("searchMealFoodsByIdMeal/{idMeal}")
     @ApiOperation(value = "Buscar MealFoods por Meal", notes = "Métodos para encontrar MealFoods por su respectivo Meal")
     @ApiResponses({
