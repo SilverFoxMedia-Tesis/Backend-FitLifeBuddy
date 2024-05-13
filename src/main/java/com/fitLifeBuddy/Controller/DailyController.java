@@ -2,6 +2,7 @@ package com.fitLifeBuddy.Controller;
 
 import com.fitLifeBuddy.Entity.*;
 import com.fitLifeBuddy.Entity.DTO.DailyDTO;
+import com.fitLifeBuddy.Entity.Enum.Frecuently;
 import com.fitLifeBuddy.Entity.Enum.Status;
 import com.fitLifeBuddy.Service.IDailyService;
 import com.fitLifeBuddy.Service.IPlanService;
@@ -9,7 +10,10 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +29,9 @@ import java.util.Optional;
 @RequestMapping("/api/dailies")
 @Api(tags = "Daily" ,value = "Service Web RESTFul de Dailies")
 public class DailyController {
+
+    private static final Logger logger = LoggerFactory.getLogger(DailyController.class);
+
     @Autowired
     private IDailyService dailyService;
 
@@ -135,7 +142,9 @@ public class DailyController {
             @ApiResponse(code = 200, message = "Dailies encontrados o no existen Dailies para esta fecha e ID de paciente"),
             @ApiResponse(code = 500, message = "Error interno del servidor")
     })
-    public ResponseEntity<List<Daily>> findByDateAndPatientId(@PathVariable("date") Date date, @PathVariable("idPacient") Long idPacient) {
+    public ResponseEntity<List<Daily>> findByDateAndPatientId(
+            @PathVariable("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date date,
+            @PathVariable("idPacient") Long idPacient) {
         try {
             List<Daily> dailies = dailyService.findByDateAndPatientId(date, idPacient);
             return new ResponseEntity<>(dailies, HttpStatus.OK);
@@ -144,21 +153,21 @@ public class DailyController {
         }
     }
 
+
     @GetMapping("searchByDate/{date}")
     @ApiOperation(value = "Buscar Daily por date", notes = "Métodos para encontrar un Daily por su respectivo date")
     @ApiResponses({
             @ApiResponse(code = 200, message = "Dailies encontrados o no existen Dailies para esta fecha"),
             @ApiResponse(code = 500, message = "Error interno del servidor")
     })
-    public ResponseEntity<List<Daily>> findByDate(@PathVariable("date") Date date) {
+    public ResponseEntity<List<Daily>> findByDate(@PathVariable("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date date) {
         try {
             List<Daily> dailies = dailyService.findByDate(date);
-            return new ResponseEntity<List<Daily>>(dailies, HttpStatus.OK);
+            return new ResponseEntity<>(dailies, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<List<Daily>>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
 
     @GetMapping("searchMealsByIdDaily/{idDaily}")
     @ApiOperation(value = "Buscar Meals por Daily", notes = "Métodos para encontrar un Meal por su respectivo Daily")
@@ -191,37 +200,53 @@ public class DailyController {
         }
     }
 
-
-    @PostMapping("/completeToday")
-    @ApiOperation(value = "Completar Daily de Hoy", notes = "Marca el Daily de hoy como completado si su estado es UNFILLED")
+    @PostMapping("/completeToday/{idPacient}")
+    @ApiOperation(value = "Completar todos los Dailies de Hoy para un paciente", notes = "Marca todos los Dailies de hoy para un paciente especificado como completados si su estado es UNFILLED")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "Daily completado"),
-            @ApiResponse(code = 404, message = "Daily no encontrado o ya completado")
+            @ApiResponse(code = 200, message = "Dailies completados"),
+            @ApiResponse(code = 404, message = "No hay Dailies UNFILLED para hoy para este paciente"),
+            @ApiResponse(code = 500, message = "Error interno del servidor")
     })
-    public ResponseEntity<?> completeTodayDaily() {
+    public ResponseEntity<?> completeTodayDaily(@PathVariable("idPacient") Long idPacient) {
         try {
-            // Obtener la fecha de hoy
             Date today = new Date();
-
-            // Buscar Dailies por fecha de hoy y estado UNFILLED
-            List<Daily> dailiesToday = dailyService.findDailyByDateAndStatusUnfilled(today);
+            List<Daily> dailiesToday = dailyService.findDailyByDateAndStatusUnfilled(today, idPacient);
 
             if (dailiesToday.isEmpty()) {
-                return new ResponseEntity<>("No hay Dailies UNFILLED para hoy.", HttpStatus.NOT_FOUND);
+                return new ResponseEntity<>("No hay Dailies UNFILLED para hoy para el paciente especificado.", HttpStatus.NOT_FOUND);
             }
 
-            // Suponiendo que solo debe haber un Daily por día, tomamos el primero
-            Daily todayDaily = dailiesToday.get(0);
+            boolean allCompleted = true;
+            for (Daily daily : dailiesToday) {
+                daily.setStatus(Status.COMPLETED);
+                dailyService.save(daily);
 
-            // Cambiar el estado a COMPLETED
-            todayDaily.setStatus(Status.COMPLETED);
+                // Comprueba si este es el último Daily basado en la frecuencia del plan
+                if (daily.getDateNumber() == getNumberOfDaysBasedOnFrequency(daily.getPlan().getFrecuently())) {
+                    allCompleted = false;
+                }
+            }
 
-            // Guardar el cambio
-            dailyService.save(todayDaily);
+            // Si todos los Dailies están completos, cambia el estado del plan a COMPLETED
+            if (allCompleted) {
+                Plan plan = dailiesToday.get(0).getPlan();
+                plan.setStatus(Status.COMPLETED);
+                planService.save(plan);
+            }
 
-            return new ResponseEntity<>(todayDaily, HttpStatus.OK);
+            return new ResponseEntity<>(dailiesToday, HttpStatus.OK);
         } catch (Exception e) {
+            logger.error("Error al completar los Dailies: {}", e.getMessage());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    private int getNumberOfDaysBasedOnFrequency(Frecuently frequency) {
+        switch (frequency) {
+            case MONTLY: return 30;
+            case BIMONTLY: return 60;
+            case QUARTERLY: return 90;
+            default: return 0;
         }
     }
 

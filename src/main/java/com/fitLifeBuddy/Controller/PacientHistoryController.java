@@ -125,4 +125,19 @@ public class PacientHistoryController {
         }
     }
 
+    @GetMapping(value = "/latest/{pacientId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Buscar la última historia del paciente por ID", notes = "Método para encontrar la última historia del paciente por su ID")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Última historia del paciente encontrada"),
+            @ApiResponse(code = 404, message = "Historia del paciente no encontrada")
+    })
+    public ResponseEntity<PacientHistory> findLatestByPacientId(@PathVariable Long pacientId) {
+        Optional<PacientHistory> pacientHistory = pacientHistoryService.findLatestByPacientId(pacientId);
+        if (pacientHistory.isPresent()) {
+            return ResponseEntity.ok(pacientHistory.get());
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
 }

@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-@Transactional(readOnly = true)
+@Transactional
 public class RoutineExerciseServiceImpl implements IRoutineExerciseService {
     @Autowired
     private IRoutineExerciseRepository routineExerciseRepository;

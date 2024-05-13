@@ -39,4 +39,8 @@ public class PacientHistoryServiceImpl implements IPacientHistoryService {
         return pacientHistoryRepository.findById(id);
     }
 
+    @Override
+    public Optional<PacientHistory> findLatestByPacientId(Long pacientId) {
+        return pacientHistoryRepository.findLatestByPacientId(pacientId);
+    }
 }

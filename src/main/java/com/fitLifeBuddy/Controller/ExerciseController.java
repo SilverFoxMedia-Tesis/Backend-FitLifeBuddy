@@ -125,7 +125,7 @@ public class ExerciseController {
             @ApiResponse(code = 201, message = "Workout encontrados"),
             @ApiResponse(code = 404, message = "Workout no encontrados")
     })
-    public ResponseEntity<List<Exercise>> findByWorkout(@PathVariable("Workout") String workout) {
+    public ResponseEntity<List<Exercise>> findByWorkout(@PathVariable("workout") String workout) {
         try {
             List<Exercise> exercises = exerciseService.findByWorkout(workout);
             if (exercises.size() > 0)

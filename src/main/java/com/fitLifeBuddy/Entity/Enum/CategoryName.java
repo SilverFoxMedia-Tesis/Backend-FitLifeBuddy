@@ -10,6 +10,7 @@ public enum CategoryName {
     Vegetables_R_Z,
     Fruits_A_F,
     Fruits_G_P,
+    Fruits_R_Z,
     Breads_cereals_fastfood_grains,
     Soups,
     Desserts_sweets,

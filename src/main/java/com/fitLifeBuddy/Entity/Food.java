@@ -20,14 +20,16 @@ public class Food implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idFood;
-    @Column(name = "NameFood", nullable = false, length = 20)
+    @Column(name = "NameFood", nullable = false, length = 50)
     private String nameFood;
-    @Column(name = "Measure", nullable = false,  length = 10)
+    @Column(name = "Measure", nullable = false,  length = 30)
     private String measure;
     @Column(name = "Grams", nullable = false)
     private Float grams;
     @Column(name = "Calories", nullable = false)
     private Float calories;
+    @Column(name = "Protein", nullable = false)
+    private Float protein;
     @Column(name = "Fat", nullable = false)
     private Float fat;
     @Column(name = "SatFat", nullable = false)

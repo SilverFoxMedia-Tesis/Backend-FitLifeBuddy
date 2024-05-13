@@ -23,7 +23,6 @@ public interface IDailyRepository extends JpaRepository<Daily, Long> {
     public List<Meal> findMealsByIdDaily(@Param("dailyId")Long idDaily);
     @Query("select d.routines from Daily d where d.idDaily = :dailyId")
     public List<Routine> findRoutinesByIdDaily(@Param("dailyId")Long idDaily);
-    @Query("select d from Daily d where d.date = :dateDaily and d.status = :status")
-    public List<Daily> findByDateAndStatus(@Param("dateDaily") Date date, @Param("status") Status status);
-
+    @Query("SELECT d FROM Daily d WHERE d.date = :dateDaily AND d.status = :status AND d.plan.pacient.idPacient = :idPacient")
+    public List<Daily> findByDateAndStatus(@Param("dateDaily") Date date, @Param("status") Status status, @Param("idPacient") Long idPacient);
 }

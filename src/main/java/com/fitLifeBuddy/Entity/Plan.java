@@ -2,6 +2,7 @@ package com.fitLifeBuddy.Entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fitLifeBuddy.Entity.Enum.ClassificationIMC;
 import com.fitLifeBuddy.Entity.Enum.DietType;
 import com.fitLifeBuddy.Entity.Enum.Frecuently;
 import com.fitLifeBuddy.Entity.Enum.Status;
@@ -32,8 +33,6 @@ public class Plan implements Serializable {
     private DietType dietType;
     @Column(name = "TMB", nullable = false)
     private Float tmb;
-    @Column(name = "CalorieDeficit", nullable = false)
-    private Float calorieDeficit;
     @Column(name = "Carbohydrates_g", nullable = false)
     private Float carbohydrates_g;
     @Column(name = "Proteins_g", nullable = false)
@@ -42,6 +41,39 @@ public class Plan implements Serializable {
     private Float fats_g;
     @Column(name = "WeightLose", nullable = false)
     private Float weightLose;
+    //lo que se va a enviar
+    @Column(name = "CalorieDeficit", nullable = false)
+    private Float calorieDeficit;
+    //desayunos
+    @Column(name = "Desayuno_carbs", nullable = false)
+    private Float desayuno_carbs;
+    @Column(name = "Desayuno_proten", nullable = false)
+    private Float desayuno_proten;
+    @Column(name = "Desayuno_grasas", nullable = false)
+    private Float desayuno_grasas;
+    //almuerzos
+    @Column(name = "Almuerzo_carbs", nullable = false)
+    private Float almuerzo_carbs;
+    @Column(name = "Almuerzo_proten", nullable = false)
+    private Float almuerzo_proten;
+    @Column(name = "Almuerzo_grasas", nullable = false)
+    private Float almuerzo_grasas;
+    //cenas
+    @Column(name = "Cena_carbs", nullable = false)
+    private Float cena_carbs;
+    @Column(name = "Cena_proten", nullable = false)
+    private Float cena_proten;
+    @Column(name = "Cena_grasas", nullable = false)
+    private Float cena_grasas;
+    //ultimos datos
+    @Column(name = "AbdominalCircumference", nullable = false)
+    private Float abdominal_circumference;
+    @Column(name = "PhysicalActivity", nullable = false)
+    private Long physical_activity;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "ClassificationIMC", nullable = false, length = 20)
+    private ClassificationIMC classificationIMC;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "Status", nullable = false, length = 10)

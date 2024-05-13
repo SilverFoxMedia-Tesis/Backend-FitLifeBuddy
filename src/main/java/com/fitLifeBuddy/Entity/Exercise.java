@@ -21,11 +21,11 @@ public class Exercise implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idExercise;
-    @Column(name = "Workout", nullable = false, length = 20)
+    @Column(name = "Workout", nullable = false, length = 50)
     private String workout;
-    @Column(name = "Sets", nullable = false, length = 5)
+    @Column(name = "Sets", nullable = false, length = 30)
     private String sets;
-    @Column(name = "RepsPerSet", nullable = false, length = 5)
+    @Column(name = "RepsPerSet", nullable = false, length = 30)
     private String repsPerSet;
 
     @Enumerated(EnumType.STRING)

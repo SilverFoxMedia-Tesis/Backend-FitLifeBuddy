@@ -15,7 +15,5 @@ public interface IDailyService extends CrudService<Daily>{
     public List<Daily> findByDate(Date date) throws Exception;
     public List<Meal> findMealsByIdDaily(Long idDaily) throws Exception;
     public List<Routine> findRoutinesByIdDaily(Long idDaily) throws Exception;
-    public List<Daily> findDailyByDateAndStatusUnfilled(Date date) throws Exception;
-
-
+    public List<Daily> findDailyByDateAndStatusUnfilled(Date date, Long idPacient) throws Exception;
 }
