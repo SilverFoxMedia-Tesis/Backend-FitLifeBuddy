@@ -1,6 +1,7 @@
 package com.fitLifeBuddy.Controller;
 
 
+import com.fitLifeBuddy.Entity.Enum.CategoryName;
 import com.fitLifeBuddy.Entity.Food;
 import com.fitLifeBuddy.Entity.Meal;
 import com.fitLifeBuddy.Entity.MealFood;
@@ -130,4 +131,26 @@ public class MealFoodController {
             return new ResponseEntity<MealFood>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @GetMapping(value = "/suggestions/{idMealFood}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Obtener sugerencias de Food por categoría", notes = "Método para obtener una lista de alimentos de la misma categoría que el alimento actual en MealFood")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Sugerencias encontradas"),
+            @ApiResponse(code = 404, message = "MealFood no encontrado")
+    })
+    public ResponseEntity<List<Food>> getFoodSuggestions(@PathVariable("idMealFood") Long idMealFood) {
+        try {
+            Optional<MealFood> mealFood = mealFoodService.getById(idMealFood);
+            if (!mealFood.isPresent())
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+            CategoryName categoryName = mealFood.get().getFood().getCategoryName();
+            List<Food> foodSuggestions = foodService.findByCategoryName(categoryName);
+
+            return new ResponseEntity<>(foodSuggestions, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 }

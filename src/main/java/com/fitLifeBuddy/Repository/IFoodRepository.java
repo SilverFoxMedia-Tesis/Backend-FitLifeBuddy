@@ -12,8 +12,10 @@ import java.util.List;
 
 @Repository
 public interface IFoodRepository extends JpaRepository<Food,Long> {
-    public List<Food> findByNameFood(String nameFood);
-    public List<Food> findByCategoryName(CategoryName categoryName);
+    @Query("select f from Food f where f.nameFood = :foodName")
+    public List<Food> findByNameFood(@Param("foodName") String nameFood);
+    @Query("select f from Food f where f.categoryName = :nameCategory")
+    public List<Food> findByCategoryName(@Param("nameCategory") CategoryName categoryName);
     @Query("select mf from MealFood mf where mf.food.idFood = :foodId")
     public List<MealFood> findMealFoodsByIdFood(@Param("foodId")Long idFood);
 
