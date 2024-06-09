@@ -2,6 +2,7 @@ package com.fitLifeBuddy.Controller;
 
 import com.fitLifeBuddy.Entity.*;
 import com.fitLifeBuddy.Entity.DTO.MealDTO;
+import com.fitLifeBuddy.Entity.Enum.TimeMeal;
 import com.fitLifeBuddy.Service.IDailyService;
 import com.fitLifeBuddy.Service.IFoodService;
 import com.fitLifeBuddy.Service.IMealService;
@@ -148,6 +149,28 @@ public class MealController {
         } catch (Exception e) {
             return new ResponseEntity<List<MealFood>>(HttpStatus.INTERNAL_SERVER_ERROR);
 
+        }
+    }
+
+    @GetMapping(value = "/randomMeals/{idPlan}/{timeMeal}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Obtener 3 Meals aleatorios de un Plan y TimeMeal", notes = "Método para obtener 3 comidas aleatorias de un mismo plan y TimeMeal")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Meals encontrados"),
+            @ApiResponse(code = 404, message = "Plan o TimeMeal no encontrado")
+    })
+    public ResponseEntity<List<Meal>> getRandomMealsByPlanIdAndTimeMeal(@PathVariable("idPlan") Long idPlan, @PathVariable("timeMeal") TimeMeal timeMeal) {
+        try {
+            logger.debug("Request to get random meals for plan ID: {} and time meal: {}", idPlan, timeMeal);
+            List<Meal> meals = mealService.findMealsByPlanIdAndTimeMeal(idPlan, timeMeal);
+            if (meals.isEmpty()) {
+                logger.debug("No meals found for plan ID: {} and time meal: {}", idPlan, timeMeal);
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+            logger.debug("Found {} meals for plan ID: {} and time meal: {}", meals.size(), idPlan, timeMeal);
+            return new ResponseEntity<>(meals, HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error("Error getting random meals for plan ID: {} and time meal: {}", idPlan, timeMeal, e);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
