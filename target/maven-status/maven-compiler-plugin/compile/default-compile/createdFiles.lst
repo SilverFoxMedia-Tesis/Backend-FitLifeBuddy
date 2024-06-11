@@ -8,6 +8,7 @@ com\fitLifeBuddy\Service\IPacientService.class
 com\fitLifeBuddy\Repository\IPacientRepository.class
 com\fitLifeBuddy\Service\IFoodService.class
 com\fitLifeBuddy\Service\impl\MealFoodServiceImpl.class
+com\fitLifeBuddy\Controller\PasswordRecoveryController.class
 com\fitLifeBuddy\Entity\Plan.class
 com\fitLifeBuddy\Service\impl\RoutineExerciseServiceImpl.class
 com\fitLifeBuddy\Controller\DailyController.class
@@ -55,6 +56,7 @@ com\fitLifeBuddy\Util\RestClientConfiguration.class
 com\fitLifeBuddy\Service\IMealService.class
 com\fitLifeBuddy\Repository\IPlanRepository.class
 com\fitLifeBuddy\Entity\DTO\DailyDTO.class
+com\fitLifeBuddy\Util\EmailService.class
 com\fitLifeBuddy\Controller\DailyController$1.class
 com\fitLifeBuddy\Entity\Pacient.class
 com\fitLifeBuddy\Entity\Person.class

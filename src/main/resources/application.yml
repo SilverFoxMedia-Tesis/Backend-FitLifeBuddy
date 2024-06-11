@@ -15,6 +15,17 @@ spring:
         jdbc:
           lob:
             non-contextual-creation: true
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: fitlifebuddyinfo@gmail.com
+    password: whed loje rtlf luvq
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
 logging:
   level:
     root: WARN

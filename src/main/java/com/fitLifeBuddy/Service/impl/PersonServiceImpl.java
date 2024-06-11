@@ -53,4 +53,10 @@ public class PersonServiceImpl implements IPersonService {
     public List<Person> findByLastname(String lastname) throws Exception {
         return personRepository.findByLastname(lastname);
     }
+
+    @Override
+    public Optional<Person> findPersonByEmailAddress(String emailAddress) throws Exception {
+        List<Person> people = personRepository.findByEmailAddress(emailAddress);
+        return people.isEmpty() ? Optional.empty() : Optional.of(people.get(0));
+    }
 }
