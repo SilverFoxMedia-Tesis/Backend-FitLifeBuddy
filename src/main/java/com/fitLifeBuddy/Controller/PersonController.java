@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,98 +26,85 @@ public class PersonController {
     private IPersonService personService;
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Listar Persons", notes = "Metodo para listar a todos los Persons")
+    @ApiOperation(value = "Listar Persons", notes = "Método para listar a todos los Persons")
     @ApiResponses({
-            @ApiResponse(code = 201, message = "Persons encontrados"),
-            @ApiResponse(code = 404, message = "Persons no encontrados")
+            @ApiResponse(code = 200, message = "Persons encontrados o lista vacía"),
+            @ApiResponse(code = 500, message = "Error interno del servidor")
     })
-    public ResponseEntity<List<Person>> findAll(){
+    public ResponseEntity<List<Person>> findAll() {
         try {
             List<Person> people = personService.getAll();
-            if (people.size() > 0)
-                return new ResponseEntity<List<Person>>(people, HttpStatus.OK);
-            else
-                return new ResponseEntity<List<Person>>(HttpStatus.NOT_FOUND);
-        } catch (Exception ex){
-        return new ResponseEntity<List<Person>>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(people, HttpStatus.OK);
+        } catch (Exception ex) {
+            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Buscar Person por Id", notes = "Métodos para encontrar un Person por su respectivo Id")
+    @ApiOperation(value = "Buscar Person por Id", notes = "Método para encontrar un Person por su respectivo Id")
     @ApiResponses({
-            @ApiResponse(code = 201, message = "Person encontrado"),
-            @ApiResponse(code = 404, message = "Person no encontrado")
+            @ApiResponse(code = 200, message = "Person encontrado o lista vacía"),
+            @ApiResponse(code = 500, message = "Error interno del servidor")
     })
-    public ResponseEntity<Person> findById(@PathVariable("id") Long id) {
+    public ResponseEntity<List<Person>> findById(@PathVariable("id") Long id) {
         try {
             Optional<Person> person = personService.getById(id);
-            if (!person.isPresent())
-                return new ResponseEntity<Person>(HttpStatus.NOT_FOUND);
-            return new ResponseEntity<Person>(person.get(), HttpStatus.OK);
+            if (!person.isPresent()) {
+                return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
+            }
+            List<Person> result = new ArrayList<>();
+            result.add(person.get());
+            return new ResponseEntity<>(result, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<Person>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @GetMapping("searchByEmailAddress/{emailAddress}")
-    @ApiOperation(value = "Buscar Person por emailAddress", notes = "Métodos para encontrar un Person por su respectivo emailAddress")
+    @ApiOperation(value = "Buscar Person por emailAddress", notes = "Método para encontrar un Person por su respectivo emailAddress")
     @ApiResponses({
-            @ApiResponse(code = 201, message = "Person encontrados"),
-            @ApiResponse(code = 404, message = "Person no encontrados")
+            @ApiResponse(code = 200, message = "Person encontrados o lista vacía"),
+            @ApiResponse(code = 500, message = "Error interno del servidor")
     })
     public ResponseEntity<List<Person>> findByEmailAddress(@PathVariable("emailAddress") String emailAddress) {
         try {
             List<Person> people = personService.findByEmailAddress(emailAddress);
-            if (people.size() > 0)
-                return new ResponseEntity<List<Person>>(people, HttpStatus.OK);
-            else
-                return new ResponseEntity<List<Person>>(HttpStatus.NOT_FOUND);
-
+            return new ResponseEntity<>(people, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<List<Person>>(HttpStatus.INTERNAL_SERVER_ERROR);
-
+            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @GetMapping("searchByFullName/{fullname}")
-    @ApiOperation(value = "Buscar Person por fullname", notes = "Métodos para encontrar un Person por su respectivo fullname")
+    @ApiOperation(value = "Buscar Person por fullname", notes = "Método para encontrar un Person por su respectivo fullname")
     @ApiResponses({
-            @ApiResponse(code = 201, message = "Person encontrados"),
-            @ApiResponse(code = 404, message = "Person no encontrados")
+            @ApiResponse(code = 200, message = "Person encontrados o lista vacía"),
+            @ApiResponse(code = 500, message = "Error interno del servidor")
     })
     public ResponseEntity<List<Person>> findByFullname(@PathVariable("fullname") String fullname) {
         try {
             List<Person> people = personService.findByFullname(fullname);
-            if (people.size() > 0)
-                return new ResponseEntity<List<Person>>(people, HttpStatus.OK);
-            else
-                return new ResponseEntity<List<Person>>(HttpStatus.NOT_FOUND);
-
+            return new ResponseEntity<>(people, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<List<Person>>(HttpStatus.INTERNAL_SERVER_ERROR);
-
+            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
     @GetMapping("searchByLastName/{lastname}")
-    @ApiOperation(value = "Buscar Person por lastname", notes = "Métodos para encontrar un Person por su respectivo lastname")
+    @ApiOperation(value = "Buscar Person por lastname", notes = "Método para encontrar un Person por su respectivo lastname")
     @ApiResponses({
-            @ApiResponse(code = 201, message = "Person encontrados"),
-            @ApiResponse(code = 404, message = "Person no encontrados")
+            @ApiResponse(code = 200, message = "Person encontrados o lista vacía"),
+            @ApiResponse(code = 500, message = "Error interno del servidor")
     })
     public ResponseEntity<List<Person>> findByLastname(@PathVariable("lastname") String lastname) {
         try {
             List<Person> people = personService.findByLastname(lastname);
-            if (people.size() > 0)
-                return new ResponseEntity<List<Person>>(people, HttpStatus.OK);
-            else
-                return new ResponseEntity<List<Person>>(HttpStatus.NOT_FOUND);
-
+            return new ResponseEntity<>(people, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<List<Person>>(HttpStatus.INTERNAL_SERVER_ERROR);
-
+            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Actualización de datos de Person", notes = "Metodo que actualiza los datos de Person")

@@ -18,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -47,25 +48,25 @@ public class HealthConditionController {
         }
     }
 
-
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Buscar HealthCondition por Id", notes = "Métodos para encontrar un HealthCondition por su respectivo Id")
+    @ApiOperation(value = "Buscar HealthCondition por Id", notes = "Método para encontrar un HealthCondition por su respectivo Id")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "HealthCondition encontrado"),
-            @ApiResponse(code = 404, message = "HealthCondition no encontrado"),
+            @ApiResponse(code = 200, message = "HealthCondition encontrado o lista vacía"),
             @ApiResponse(code = 500, message = "Error interno del servidor")
     })
-    public ResponseEntity<HealthCondition> findById(@PathVariable("id") Long id) {
+    public ResponseEntity<List<HealthCondition>> findById(@PathVariable("id") Long id) {
         try {
             Optional<HealthCondition> healthCondition = healthConditionService.getById(id);
-            if (!healthCondition.isPresent())
-                return new ResponseEntity<HealthCondition>(HttpStatus.NOT_FOUND);
-            return new ResponseEntity<HealthCondition>(healthCondition.get(), HttpStatus.OK);
+            if (!healthCondition.isPresent()) {
+                return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
+            }
+            List<HealthCondition> result = new ArrayList<>();
+            result.add(healthCondition.get());
+            return new ResponseEntity<>(result, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<HealthCondition>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Actualización de datos de HealthCondition", notes = "Metodo que actualiza los datos de HealthCondition")

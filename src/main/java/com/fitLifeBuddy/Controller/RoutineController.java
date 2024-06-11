@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -46,21 +47,25 @@ public class RoutineController {
 
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Buscar Routine por Id", notes = "Métodos para encontrar un Routine por su respectivo Id")
+    @ApiOperation(value = "Buscar Routine por Id", notes = "Método para encontrar un Routine por su respectivo Id")
     @ApiResponses({
-            @ApiResponse(code = 201, message = "Routine encontrado"),
-            @ApiResponse(code = 404, message = "Routine no encontrado")
+            @ApiResponse(code = 200, message = "Routine encontrado o lista vacía"),
+            @ApiResponse(code = 500, message = "Error interno del servidor")
     })
-    public ResponseEntity<Routine> findById(@PathVariable("id") Long id) {
+    public ResponseEntity<List<Routine>> findById(@PathVariable("id") Long id) {
         try {
             Optional<Routine> routine = routineService.getById(id);
-            if (!routine.isPresent())
-                return new ResponseEntity<Routine>(HttpStatus.NOT_FOUND);
-            return new ResponseEntity<Routine>(routine.get(), HttpStatus.OK);
+            if (!routine.isPresent()) {
+                return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
+            }
+            List<Routine> result = new ArrayList<>();
+            result.add(routine.get());
+            return new ResponseEntity<>(result, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<Routine>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Actualización de datos de Routine", notes = "Metodo que actualiza los datos de Routine")
@@ -125,22 +130,18 @@ public class RoutineController {
     }
 
     @GetMapping("searchRoutineExercisesByIdRoutine/{idRoutine}")
-    @ApiOperation(value = "Buscar RoutineExercises por Routine", notes = "Métodos para encontrar RoutineExercises por su respectivo Routine")
+    @ApiOperation(value = "Buscar RoutineExercises por Routine", notes = "Método para encontrar RoutineExercises por su respectivo Routine")
     @ApiResponses({
-            @ApiResponse(code = 201, message = "RoutineExercises encontrados"),
-            @ApiResponse(code = 404, message = "RoutineExercises no encontrados")
+            @ApiResponse(code = 200, message = "RoutineExercises encontrados o lista vacía"),
+            @ApiResponse(code = 500, message = "Error interno del servidor")
     })
     public ResponseEntity<List<RoutineExercise>> findRoutineExercisesByIdRoutine(@PathVariable("idRoutine") Long idRoutine) {
         try {
             List<RoutineExercise> routineExercises = routineService.findRoutineExercisesByIdRoutine(idRoutine);
-            if (routineExercises.size() > 0)
-                return new ResponseEntity<List<RoutineExercise>>(routineExercises, HttpStatus.OK);
-            else
-                return new ResponseEntity<List<RoutineExercise>>(HttpStatus.NOT_FOUND);
-
+            return new ResponseEntity<>(routineExercises, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<List<RoutineExercise>>(HttpStatus.INTERNAL_SERVER_ERROR);
-
+            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
 }

@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,23 +46,26 @@ public class PacientHistoryController {
         }
     }
 
-
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Buscar PacientHistory por Id", notes = "Métodos para encontrar un PacientHistory por su respectivo Id")
+    @ApiOperation(value = "Buscar PacientHistory por Id", notes = "Método para encontrar un PacientHistory por su respectivo Id")
     @ApiResponses({
-            @ApiResponse(code = 201, message = "PacientHistory encontrado"),
-            @ApiResponse(code = 404, message = "PacientHistory no encontrado")
+            @ApiResponse(code = 200, message = "PacientHistory encontrado o lista vacía"),
+            @ApiResponse(code = 500, message = "Error interno del servidor")
     })
-    public ResponseEntity<PacientHistory> findById(@PathVariable("id") Long id) {
+    public ResponseEntity<List<PacientHistory>> findById(@PathVariable("id") Long id) {
         try {
             Optional<PacientHistory> pacientHistory = pacientHistoryService.getById(id);
-            if (!pacientHistory.isPresent())
-                return new ResponseEntity<PacientHistory>(HttpStatus.NOT_FOUND);
-            return new ResponseEntity<PacientHistory>(pacientHistory.get(), HttpStatus.OK);
+            if (!pacientHistory.isPresent()) {
+                return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
+            }
+            List<PacientHistory> result = new ArrayList<>();
+            result.add(pacientHistory.get());
+            return new ResponseEntity<>(result, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<PacientHistory>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Actualización de datos de PacientHistory", notes = "Metodo que actualiza los datos de PacientHistory")
@@ -128,16 +132,23 @@ public class PacientHistoryController {
     @GetMapping(value = "/latest/{pacientId}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Buscar la última historia del paciente por ID", notes = "Método para encontrar la última historia del paciente por su ID")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "Última historia del paciente encontrada"),
-            @ApiResponse(code = 404, message = "Historia del paciente no encontrada")
+            @ApiResponse(code = 200, message = "Última historia del paciente encontrada o lista vacía"),
+            @ApiResponse(code = 500, message = "Error interno del servidor")
     })
-    public ResponseEntity<PacientHistory> findLatestByPacientId(@PathVariable Long pacientId) {
-        Optional<PacientHistory> pacientHistory = pacientHistoryService.findLatestByPacientId(pacientId);
-        if (pacientHistory.isPresent()) {
-            return ResponseEntity.ok(pacientHistory.get());
-        } else {
-            return ResponseEntity.notFound().build();
+    public ResponseEntity<List<PacientHistory>> findLatestByPacientId(@PathVariable Long pacientId) {
+        try {
+            Optional<PacientHistory> pacientHistory = pacientHistoryService.findLatestByPacientId(pacientId);
+            if (pacientHistory.isPresent()) {
+                List<PacientHistory> result = new ArrayList<>();
+                result.add(pacientHistory.get());
+                return new ResponseEntity<>(result, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
+            }
+        } catch (Exception e) {
+            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
 
 }

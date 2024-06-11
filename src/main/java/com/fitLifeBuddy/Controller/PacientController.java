@@ -17,10 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.validation.Valid;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @CrossOrigin
 @RestController
@@ -40,39 +37,41 @@ public class PacientController {
     private INutritionistService nutritionistService;
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Listar Pacients", notes = "Metodo para listar a todos los Pacients")
+    @ApiOperation(value = "Listar Pacients", notes = "Método para listar a todos los Pacients")
     @ApiResponses({
-            @ApiResponse(code = 201, message = "Pacients encontrados"),
-            @ApiResponse(code = 404, message = "Pacients no encontrados")
+            @ApiResponse(code = 200, message = "Pacients encontrados o lista vacía"),
+            @ApiResponse(code = 500, message = "Error interno del servidor")
     })
-    public ResponseEntity<List<Pacient>> findAll(){
+    public ResponseEntity<List<Pacient>> findAll() {
         try {
             List<Pacient> pacients = pacientService.getAll();
-            if (pacients.size() > 0)
-                return new ResponseEntity<List<Pacient>>(pacients, HttpStatus.OK);
-            else
-                return new ResponseEntity<List<Pacient>>(HttpStatus.NOT_FOUND);
-        } catch (Exception ex){
-            return new ResponseEntity<List<Pacient>>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(pacients, HttpStatus.OK);
+        } catch (Exception ex) {
+            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
+
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Buscar Pacient por Id", notes = "Métodos para encontrar un Pacient por su respectivo Id")
+    @ApiOperation(value = "Buscar Pacient por Id", notes = "Método para encontrar un Pacient por su respectivo Id")
     @ApiResponses({
-            @ApiResponse(code = 201, message = "Pacient encontrado"),
-            @ApiResponse(code = 404, message = "Pacient no encontrado")
+            @ApiResponse(code = 200, message = "Pacient encontrado o lista vacía"),
+            @ApiResponse(code = 500, message = "Error interno del servidor")
     })
-    public ResponseEntity<Pacient> findById(@PathVariable("id") Long id) {
+    public ResponseEntity<List<Pacient>> findById(@PathVariable("id") Long id) {
         try {
             Optional<Pacient> pacient = pacientService.getById(id);
-            if (!pacient.isPresent())
-                return new ResponseEntity<Pacient>(HttpStatus.NOT_FOUND);
-            return new ResponseEntity<Pacient>(pacient.get(), HttpStatus.OK);
+            if (!pacient.isPresent()) {
+                return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
+            }
+            List<Pacient> result = new ArrayList<>();
+            result.add(pacient.get());
+            return new ResponseEntity<>(result, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<Pacient>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
 
     @PostMapping(value = "/{idPerson}/{idNutritionist}",consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Registro de Pacients", notes = "Método que registra Pacients en BD")
@@ -137,105 +136,83 @@ public class PacientController {
     }
 
     @GetMapping("searchPacientHistoryByIdPacient/{idPacient}")
-    @ApiOperation(value = "Buscar PacientHistory por Pacient", notes = "Métodos para encontrar PacientHistory por su respectivo Pacient")
+    @ApiOperation(value = "Buscar PacientHistory por Pacient", notes = "Método para encontrar PacientHistory por su respectivo Pacient")
     @ApiResponses({
-            @ApiResponse(code = 201, message = "PacientHistory encontrados"),
-            @ApiResponse(code = 404, message = "PacientHistory no encontrados")
+            @ApiResponse(code = 200, message = "PacientHistory encontrados o lista vacía"),
+            @ApiResponse(code = 500, message = "Error interno del servidor")
     })
     public ResponseEntity<List<PacientHistory>> findPacientHistoryByIdPacient(@PathVariable("idPacient") Long idPacient) {
         try {
             List<PacientHistory> pacientHistories = pacientService.findPacientHistoryByIdPacient(idPacient);
-            if (pacientHistories.size() > 0) {
-                return new ResponseEntity<>(pacientHistories, HttpStatus.OK);
-            } else {
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-            }
+            return new ResponseEntity<>(pacientHistories, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
+
     @GetMapping("searchPlanByIdPacient/{idPacient}")
-    @ApiOperation(value = "Buscar Plan por Pacient", notes = "Métodos para encontrar Plan por su respectivo Pacient")
+    @ApiOperation(value = "Buscar Plan por Pacient", notes = "Método para encontrar Plan por su respectivo Pacient")
     @ApiResponses({
-            @ApiResponse(code = 201, message = "Plan encontrados"),
-            @ApiResponse(code = 404, message = "Plan no encontrados")
+            @ApiResponse(code = 200, message = "Plan encontrados o lista vacía"),
+            @ApiResponse(code = 500, message = "Error interno del servidor")
     })
     public ResponseEntity<List<Plan>> findPlanByIdPacient(@PathVariable("idPacient") Long idPacient) {
         try {
             List<Plan> plans = pacientService.findPlanByIdPacient(idPacient);
-            if (plans.size() > 0)
-                return new ResponseEntity<List<Plan>>(plans, HttpStatus.OK);
-            else
-                return new ResponseEntity<List<Plan>>(HttpStatus.NOT_FOUND);
-
+            return new ResponseEntity<>(plans, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<List<Plan>>(HttpStatus.INTERNAL_SERVER_ERROR);
-
+            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
-
-
     }
 
+
     @GetMapping("searchByBirthDate/{birthDate}")
-    @ApiOperation(value = "Buscar Pacient por birthDate", notes = "Métodos para encontrar un Pacient por su respectivo birthDate")
+    @ApiOperation(value = "Buscar Pacient por birthDate", notes = "Método para encontrar un Pacient por su respectivo birthDate")
     @ApiResponses({
-            @ApiResponse(code = 201, message = "Pacients encontrados"),
-            @ApiResponse(code = 404, message = "Pacients no encontrados")
+            @ApiResponse(code = 200, message = "Pacients encontrados o lista vacía"),
+            @ApiResponse(code = 500, message = "Error interno del servidor")
     })
     public ResponseEntity<List<Pacient>> find(@PathVariable("birthDate") Date birthDate) {
         try {
             List<Pacient> pacients = pacientService.find(birthDate);
-            if (pacients.size() > 0)
-                return new ResponseEntity<List<Pacient>>(pacients, HttpStatus.OK);
-            else
-                return new ResponseEntity<List<Pacient>>(HttpStatus.NOT_FOUND);
-
+            return new ResponseEntity<>(pacients, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<List<Pacient>>(HttpStatus.INTERNAL_SERVER_ERROR);
-
+            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
+
     @GetMapping("searchHealthConditionByIdPacient/{idPacient}")
-    @ApiOperation(value = "Buscar HealthCondition por idPacient", notes = "Métodos para encontrar HealthCondition por su respectivo idPacient")
+    @ApiOperation(value = "Buscar HealthCondition por idPacient", notes = "Método para encontrar HealthCondition por su respectivo idPacient")
     @ApiResponses({
-            @ApiResponse(code = 201, message = "HealthConditions encontrados"),
-            @ApiResponse(code = 404, message = "HealthConditions no encontrados")
+            @ApiResponse(code = 200, message = "HealthConditions encontrados o lista vacía"),
+            @ApiResponse(code = 500, message = "Error interno del servidor")
     })
     public ResponseEntity<List<HealthCondition>> findHealthConditionsByIdPacient(@PathVariable("idPacient") Long idPacient) {
         try {
             List<HealthCondition> healthConditions = pacientService.findHealthConditionsByIdPacient(idPacient);
-            if (healthConditions.size() > 0)
-                return new ResponseEntity<List<HealthCondition>>(healthConditions, HttpStatus.OK);
-            else
-                return new ResponseEntity<List<HealthCondition>>(HttpStatus.NOT_FOUND);
-
+            return new ResponseEntity<>(healthConditions, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<List<HealthCondition>>(HttpStatus.INTERNAL_SERVER_ERROR);
-
+            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
+
     @GetMapping("searchFoodConditionByIdPacient/{idPacient}")
-    @ApiOperation(value = "Buscar FoodCondition por idPacient", notes = "Métodos para encontrar FoodCondition por su respectivo idPacient")
+    @ApiOperation(value = "Buscar FoodCondition por idPacient", notes = "Método para encontrar FoodCondition por su respectivo idPacient")
     @ApiResponses({
-            @ApiResponse(code = 201, message = "FoodCondition encontrados"),
-            @ApiResponse(code = 404, message = "FoodCondition no encontrados")
+            @ApiResponse(code = 200, message = "FoodCondition encontrados o lista vacía"),
+            @ApiResponse(code = 500, message = "Error interno del servidor")
     })
     public ResponseEntity<List<FoodCondition>> findFoodConditionsByIdPacient(@PathVariable("idPacient") Long idPacient) {
         try {
             List<FoodCondition> foodConditions = pacientService.findFoodConditionsByIdPacient(idPacient);
-            if (foodConditions.size() > 0)
-                return new ResponseEntity<List<FoodCondition>>(foodConditions, HttpStatus.OK);
-            else
-                return new ResponseEntity<List<FoodCondition>>(HttpStatus.NOT_FOUND);
-
+            return new ResponseEntity<>(foodConditions, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<List<FoodCondition>>(HttpStatus.INTERNAL_SERVER_ERROR);
-
+            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
 
 }

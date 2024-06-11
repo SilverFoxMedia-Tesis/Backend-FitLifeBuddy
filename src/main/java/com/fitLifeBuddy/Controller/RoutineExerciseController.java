@@ -17,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -51,21 +52,25 @@ public class RoutineExerciseController {
 
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Buscar RoutineExercise por Id", notes = "Métodos para encontrar un RoutineExercise por su respectivo Id")
+    @ApiOperation(value = "Buscar RoutineExercise por Id", notes = "Método para encontrar un RoutineExercise por su respectivo Id")
     @ApiResponses({
-            @ApiResponse(code = 201, message = "RoutineExercise encontrado"),
-            @ApiResponse(code = 404, message = "RoutineExercise no encontrado")
+            @ApiResponse(code = 200, message = "RoutineExercise encontrado o lista vacía"),
+            @ApiResponse(code = 500, message = "Error interno del servidor")
     })
-    public ResponseEntity<RoutineExercise> findById(@PathVariable("id") Long id) {
+    public ResponseEntity<List<RoutineExercise>> findById(@PathVariable("id") Long id) {
         try {
             Optional<RoutineExercise> routineExercise = routineExerciseService.getById(id);
-            if (!routineExercise.isPresent())
-                return new ResponseEntity<RoutineExercise>(HttpStatus.NOT_FOUND);
-            return new ResponseEntity<RoutineExercise>(routineExercise.get(), HttpStatus.OK);
+            if (!routineExercise.isPresent()) {
+                return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
+            }
+            List<RoutineExercise> result = new ArrayList<>();
+            result.add(routineExercise.get());
+            return new ResponseEntity<>(result, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<RoutineExercise>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Actualización de datos de RoutineExercise", notes = "Metodo que actualiza los datos de RoutineExercise")

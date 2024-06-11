@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,39 +32,41 @@ public class OptionController {
     private IQuestionService questionService;
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Listar Options", notes = "Metodo para listar a todos los Options")
+    @ApiOperation(value = "Listar Options", notes = "Método para listar a todos los Options")
     @ApiResponses({
-            @ApiResponse(code = 201, message = "Options encontrados"),
-            @ApiResponse(code = 404, message = "Options no encontrados")
+            @ApiResponse(code = 200, message = "Options encontrados o lista vacía"),
+            @ApiResponse(code = 500, message = "Error interno del servidor")
     })
-    public ResponseEntity<List<Option>> findAll(){
+    public ResponseEntity<List<Option>> findAll() {
         try {
             List<Option> options = optionService.getAll();
-            if (options.size() > 0)
-                return new ResponseEntity<List<Option>>(options, HttpStatus.OK);
-            else
-                return new ResponseEntity<List<Option>>(HttpStatus.NOT_FOUND);
-        } catch (Exception ex){
-            return new ResponseEntity<List<Option>>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(options, HttpStatus.OK);
+        } catch (Exception ex) {
+            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
+
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Buscar Option por Id", notes = "Métodos para encontrar un Option por su respectivo Id")
+    @ApiOperation(value = "Buscar Option por Id", notes = "Método para encontrar un Option por su respectivo Id")
     @ApiResponses({
-            @ApiResponse(code = 201, message = "Option encontrado"),
-            @ApiResponse(code = 404, message = "Option no encontrado")
+            @ApiResponse(code = 200, message = "Option encontrado o lista vacía"),
+            @ApiResponse(code = 500, message = "Error interno del servidor")
     })
-    public ResponseEntity<Option> findById(@PathVariable("id") Long id) {
+    public ResponseEntity<List<Option>> findById(@PathVariable("id") Long id) {
         try {
             Optional<Option> option = optionService.getById(id);
-            if (!option.isPresent())
-                return new ResponseEntity<Option>(HttpStatus.NOT_FOUND);
-            return new ResponseEntity<Option>(option.get(), HttpStatus.OK);
+            if (!option.isPresent()) {
+                return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
+            }
+            List<Option> result = new ArrayList<>();
+            result.add(option.get());
+            return new ResponseEntity<>(result, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<Option>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Actualización de datos de Option", notes = "Metodo que actualiza los datos de Option")
@@ -128,22 +131,18 @@ public class OptionController {
     }
 
     @GetMapping("searchByNameOption/{nameOption}")
-    @ApiOperation(value = "Buscar Option por nameOption", notes = "Métodos para encontrar un Option por su respectivo nameOption")
+    @ApiOperation(value = "Buscar Option por nameOption", notes = "Método para encontrar un Option por su respectivo nameOption")
     @ApiResponses({
-            @ApiResponse(code = 201, message = "Options encontrados"),
-            @ApiResponse(code = 404, message = "Options no encontrados")
+            @ApiResponse(code = 200, message = "Options encontrados o lista vacía"),
+            @ApiResponse(code = 500, message = "Error interno del servidor")
     })
     public ResponseEntity<List<Option>> findByNameOption(@PathVariable("nameOption") String nameOption) {
         try {
             List<Option> options = optionService.findByNameOption(nameOption);
-            if (options.size() > 0)
-                return new ResponseEntity<List<Option>>(options, HttpStatus.OK);
-            else
-                return new ResponseEntity<List<Option>>(HttpStatus.NOT_FOUND);
-
+            return new ResponseEntity<>(options, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<List<Option>>(HttpStatus.INTERNAL_SERVER_ERROR);
-
+            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
 }

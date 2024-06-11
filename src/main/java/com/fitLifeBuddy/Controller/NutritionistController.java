@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,62 +33,58 @@ public class NutritionistController {
     private IPersonService personService;
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Listar Nutritionists",notes = "Métodos para listar a todos los nutritionists")
+    @ApiOperation(value = "Listar Nutritionists", notes = "Método para listar a todos los nutritionists")
     @ApiResponses({
-            @ApiResponse(code = 201, message = "Nutritionists encontrados"),
-            @ApiResponse(code = 404, message = "Nutritionists no encontrados")
+            @ApiResponse(code = 200, message = "Nutritionists encontrados o lista vacía"),
+            @ApiResponse(code = 500, message = "Error interno del servidor")
     })
-    public ResponseEntity<List<Nutritionist>> findAll(){
+    public ResponseEntity<List<Nutritionist>> findAll() {
         try {
             List<Nutritionist> nutritionists = nutritionistService.getAll();
-            if (nutritionists.size() > 0)
-                return new ResponseEntity<List<Nutritionist>>(nutritionists, HttpStatus.OK);
-            else
-                return new ResponseEntity<List<Nutritionist>>(HttpStatus.NOT_FOUND);
-
+            return new ResponseEntity<>(nutritionists, HttpStatus.OK);
         } catch (Exception ex) {
-            return new ResponseEntity<List<Nutritionist>>(HttpStatus.INTERNAL_SERVER_ERROR);
-
+            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Buscar Nutritionist por Id", notes = "Métodos para encontrar un Nutritionist por su respectivo Id")
+    @ApiOperation(value = "Buscar Nutritionist por Id", notes = "Método para encontrar un Nutritionist por su respectivo Id")
     @ApiResponses({
-            @ApiResponse(code = 201, message = "Nutritionist encontrado"),
-            @ApiResponse(code = 404, message = "Nutritionist no encontrado")
+            @ApiResponse(code = 200, message = "Nutritionist encontrado o lista vacía"),
+            @ApiResponse(code = 500, message = "Error interno del servidor")
     })
-    public ResponseEntity<Nutritionist> findById(@PathVariable("id") Long id) {
+    public ResponseEntity<List<Nutritionist>> findById(@PathVariable("id") Long id) {
         try {
             Optional<Nutritionist> nutritionist = nutritionistService.getById(id);
-            if (!nutritionist.isPresent())
-                return new ResponseEntity<Nutritionist>(HttpStatus.NOT_FOUND);
-            return new ResponseEntity<Nutritionist>(nutritionist.get(), HttpStatus.OK);
+            if (!nutritionist.isPresent()) {
+                return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
+            }
+            List<Nutritionist> result = new ArrayList<>();
+            result.add(nutritionist.get());
+            return new ResponseEntity<>(result, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<Nutritionist>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
 
 
     @GetMapping("searchPacientsByIdNutritionist/{idNutritionist}")
-    @ApiOperation(value = "Buscar Pacients por Nutritionist", notes = "Métodos para encontrar Pacients por su respectivo Nutricionist")
+    @ApiOperation(value = "Buscar Pacients por Nutritionist", notes = "Método para encontrar Pacients por su respectivo Nutricionist")
     @ApiResponses({
-            @ApiResponse(code = 201, message = "Pacients encontrados"),
-            @ApiResponse(code = 404, message = "Pacients no encontrados")
+            @ApiResponse(code = 200, message = "Pacients encontrados o lista vacía"),
+            @ApiResponse(code = 500, message = "Error interno del servidor")
     })
     public ResponseEntity<List<Pacient>> findPacientsByIdNutritionist(@PathVariable("idNutritionist") Long idNutritionist) {
         try {
             List<Pacient> pacients = nutritionistService.findPacientsByIdNutritionist(idNutritionist);
-            if (pacients.size() > 0)
-                return new ResponseEntity<List<Pacient>>(pacients, HttpStatus.OK);
-            else
-                return new ResponseEntity<List<Pacient>>(HttpStatus.NOT_FOUND);
-
+            return new ResponseEntity<>(pacients, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<List<Pacient>>(HttpStatus.INTERNAL_SERVER_ERROR);
-
+            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
 
 
     @PostMapping(value = "{idPerson}",consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)

@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,39 +33,40 @@ public class FeedbackController {
     private IDailyService dailyService;
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Listar Feedbacks", notes = "Metodo para listar a todos los Feedbacks")
+    @ApiOperation(value = "Listar Feedbacks", notes = "Método para listar a todos los Feedbacks")
     @ApiResponses({
-            @ApiResponse(code = 201, message = "Feedbacks encontrados"),
-            @ApiResponse(code = 404, message = "Feedbacks no encontrados")
+            @ApiResponse(code = 200, message = "Feedbacks encontrados o lista vacía"),
+            @ApiResponse(code = 500, message = "Error interno del servidor")
     })
-    public ResponseEntity<List<Feedback>> findAll(){
+    public ResponseEntity<List<Feedback>> findAll() {
         try {
             List<Feedback> feedbacks = feedbackService.getAll();
-            if (feedbacks.size() > 0)
-                return new ResponseEntity<List<Feedback>>(feedbacks, HttpStatus.OK);
-            else
-                return new ResponseEntity<List<Feedback>>(HttpStatus.NOT_FOUND);
-        } catch (Exception ex){
-            return new ResponseEntity<List<Feedback>>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(feedbacks, HttpStatus.OK);
+        } catch (Exception ex) {
+            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Buscar Feedback por Id", notes = "Métodos para encontrar un Feedback por su respectivo Id")
+    @ApiOperation(value = "Buscar Feedback por Id", notes = "Método para encontrar un Feedback por su respectivo Id")
     @ApiResponses({
-            @ApiResponse(code = 201, message = "Feedback encontrado"),
-            @ApiResponse(code = 404, message = "Feedback no encontrado")
+            @ApiResponse(code = 200, message = "Feedback encontrado o lista vacía"),
+            @ApiResponse(code = 500, message = "Error interno del servidor")
     })
-    public ResponseEntity<Feedback> findById(@PathVariable("id") Long id) {
+    public ResponseEntity<List<Feedback>> findById(@PathVariable("id") Long id) {
         try {
             Optional<Feedback> feedback = feedbackService.getById(id);
-            if (!feedback.isPresent())
-                return new ResponseEntity<Feedback>(HttpStatus.NOT_FOUND);
-            return new ResponseEntity<Feedback>(feedback.get(), HttpStatus.OK);
+            if (!feedback.isPresent()) {
+                return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
+            }
+            List<Feedback> result = new ArrayList<>();
+            result.add(feedback.get());
+            return new ResponseEntity<>(result, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<Feedback>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Actualización de datos de Feedback", notes = "Metodo que actualiza los datos de Feedback")
@@ -129,22 +131,18 @@ public class FeedbackController {
     }
 
     @GetMapping("searchQuestionsByIdFeedback/{idFeedback}")
-    @ApiOperation(value = "Buscar Question por Feedback", notes = "Métodos para encontrar Questions por su respectivo Feedback")
+    @ApiOperation(value = "Buscar Question por Feedback", notes = "Método para encontrar Questions por su respectivo Feedback")
     @ApiResponses({
-            @ApiResponse(code = 201, message = "Question encontrados"),
-            @ApiResponse(code = 404, message = "Question no encontrados")
+            @ApiResponse(code = 200, message = "Questions encontrados o lista vacía"),
+            @ApiResponse(code = 500, message = "Error interno del servidor")
     })
     public ResponseEntity<List<Question>> findQuestionsByIdFeedback(@PathVariable("idFeedback") Long idFeedback) {
         try {
             List<Question> questions = feedbackService.findQuestionsByIdFeedback(idFeedback);
-            if (questions.size() > 0)
-                return new ResponseEntity<List<Question>>(questions, HttpStatus.OK);
-            else
-                return new ResponseEntity<List<Question>>(HttpStatus.NOT_FOUND);
-
+            return new ResponseEntity<>(questions, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<List<Question>>(HttpStatus.INTERNAL_SERVER_ERROR);
-
+            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
 }

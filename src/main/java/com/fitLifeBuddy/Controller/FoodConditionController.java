@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -49,21 +50,22 @@ public class FoodConditionController {
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Buscar FoodCondition por Id", notes = "Método para encontrar un FoodCondition por su respectivo Id")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "FoodCondition encontrado"),
-            @ApiResponse(code = 404, message = "FoodCondition no encontrado"),
+            @ApiResponse(code = 200, message = "FoodCondition encontrado o lista vacía"),
             @ApiResponse(code = 500, message = "Error interno del servidor")
     })
-    public ResponseEntity<FoodCondition> findById(@PathVariable("id") Long id) {
+    public ResponseEntity<List<FoodCondition>> findById(@PathVariable("id") Long id) {
         try {
             Optional<FoodCondition> foodCondition = foodConditionService.getById(id);
-            if (!foodCondition.isPresent())
-                return new ResponseEntity<FoodCondition>(HttpStatus.NOT_FOUND);
-            return new ResponseEntity<FoodCondition>(foodCondition.get(), HttpStatus.OK);
+            if (!foodCondition.isPresent()) {
+                return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
+            }
+            List<FoodCondition> result = new ArrayList<>();
+            result.add(foodCondition.get());
+            return new ResponseEntity<>(result, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<FoodCondition>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Actualización de datos de FoodCondition", notes = "Metodo que actualiza los datos de FoodCondition")
@@ -127,20 +129,21 @@ public class FoodConditionController {
         }
     }
 
-    @GetMapping("searchByNameFoodCondition/{nameFoodContidion}")
-    @ApiOperation(value = "Buscar FoodCondition por nameFoodContidion", notes = "Métodos para encontrar un FoodCondition por su respectivo nameFoodContidion")
+    @GetMapping("searchByNameFoodCondition/{nameFoodCondition}")
+    @ApiOperation(value = "Buscar FoodCondition por nameFoodCondition", notes = "Método para encontrar un FoodCondition por su respectivo nameFoodCondition")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "FoodCondition encontrados o no existen FoodConditions con ese nombre"),
+            @ApiResponse(code = 200, message = "FoodCondition encontrados o lista vacía"),
             @ApiResponse(code = 500, message = "Error interno del servidor")
     })
-    public ResponseEntity<List<FoodCondition>> findByNameFoodCondition(@PathVariable("nameFoodContidion") String nameFoodContidion) {
+    public ResponseEntity<List<FoodCondition>> findByNameFoodCondition(@PathVariable("nameFoodCondition") String nameFoodCondition) {
         try {
-            List<FoodCondition> foodConditions = foodConditionService.findByNameFoodCondition(nameFoodContidion);
-            return new ResponseEntity<List<FoodCondition>>(foodConditions, HttpStatus.OK);
+            List<FoodCondition> foodConditions = foodConditionService.findByNameFoodCondition(nameFoodCondition);
+            return new ResponseEntity<>(foodConditions, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<List<FoodCondition>>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
 
     @GetMapping("searchByTypeFoodCondition/{typeFoodCondition}")
     @ApiOperation(value = "Buscar FoodCondition por typeFoodCondition", notes = "Métodos para encontrar un FoodCondition por su respectivo typeFoodCondition")

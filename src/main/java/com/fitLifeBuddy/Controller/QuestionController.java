@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,37 +32,38 @@ public class QuestionController {
     private IFeedbackService feedbackService;
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Listar Questions", notes = "Metodo para listar a todos los Questions")
+    @ApiOperation(value = "Listar Questions", notes = "Método para listar a todos los Questions")
     @ApiResponses({
-            @ApiResponse(code = 201, message = "Questions encontrados"),
-            @ApiResponse(code = 404, message = "Questions no encontrados")
+            @ApiResponse(code = 200, message = "Questions encontrados o lista vacía"),
+            @ApiResponse(code = 500, message = "Error interno del servidor")
     })
-    public ResponseEntity<List<Question>> findAll(){
+    public ResponseEntity<List<Question>> findAll() {
         try {
             List<Question> questions = questionService.getAll();
-            if (questions.size() > 0)
-                return new ResponseEntity<List<Question>>(questions, HttpStatus.OK);
-            else
-                return new ResponseEntity<List<Question>>(HttpStatus.NOT_FOUND);
-        } catch (Exception ex){
-            return new ResponseEntity<List<Question>>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(questions, HttpStatus.OK);
+        } catch (Exception ex) {
+            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
+
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Buscar Question por Id", notes = "Métodos para encontrar un Question por su respectivo Id")
+    @ApiOperation(value = "Buscar Question por Id", notes = "Método para encontrar un Question por su respectivo Id")
     @ApiResponses({
-            @ApiResponse(code = 201, message = "Question encontrado"),
-            @ApiResponse(code = 404, message = "Question no encontrado")
+            @ApiResponse(code = 200, message = "Question encontrado o lista vacía"),
+            @ApiResponse(code = 500, message = "Error interno del servidor")
     })
-    public ResponseEntity<Question> findById(@PathVariable("id") Long id) {
+    public ResponseEntity<List<Question>> findById(@PathVariable("id") Long id) {
         try {
             Optional<Question> question = questionService.getById(id);
-            if (!question.isPresent())
-                return new ResponseEntity<Question>(HttpStatus.NOT_FOUND);
-            return new ResponseEntity<Question>(question.get(), HttpStatus.OK);
+            if (!question.isPresent()) {
+                return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
+            }
+            List<Question> result = new ArrayList<>();
+            result.add(question.get());
+            return new ResponseEntity<>(result, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<Question>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -128,42 +130,33 @@ public class QuestionController {
     }
 
     @GetMapping("searchByNameQuestion/{nameQuestion}")
-    @ApiOperation(value = "Buscar Question por nameQuestion", notes = "Métodos para encontrar un Question por su respectivo nameQuestion")
+    @ApiOperation(value = "Buscar Question por nameQuestion", notes = "Método para encontrar un Question por su respectivo nameQuestion")
     @ApiResponses({
-            @ApiResponse(code = 201, message = "Question encontrados"),
-            @ApiResponse(code = 404, message = "Question no encontrados")
+            @ApiResponse(code = 200, message = "Question encontrados o lista vacía"),
+            @ApiResponse(code = 500, message = "Error interno del servidor")
     })
     public ResponseEntity<List<Question>> findByNameQuestion(@PathVariable("nameQuestion") String nameQuestion) {
         try {
             List<Question> questions = questionService.findByNameQuestion(nameQuestion);
-            if (questions.size() > 0)
-                return new ResponseEntity<List<Question>>(questions, HttpStatus.OK);
-            else
-                return new ResponseEntity<List<Question>>(HttpStatus.NOT_FOUND);
-
+            return new ResponseEntity<>(questions, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<List<Question>>(HttpStatus.INTERNAL_SERVER_ERROR);
-
+            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @GetMapping("searchOptionsByIdQuestion/{idQuestion}")
-    @ApiOperation(value = "Buscar Options por Question", notes = "Métodos para encontrar Options por su respectivo Question")
+    @ApiOperation(value = "Buscar Options por Question", notes = "Método para encontrar Options por su respectivo Question")
     @ApiResponses({
-            @ApiResponse(code = 201, message = "Options encontrados"),
-            @ApiResponse(code = 404, message = "Options no encontrados")
+            @ApiResponse(code = 200, message = "Options encontrados o lista vacía"),
+            @ApiResponse(code = 500, message = "Error interno del servidor")
     })
     public ResponseEntity<List<Option>> findOptionsByIdQuestion(@PathVariable("idQuestion") Long idQuestion) {
         try {
             List<Option> options = questionService.findOptionsByIdQuestion(idQuestion);
-            if (options.size() > 0)
-                return new ResponseEntity<List<Option>>(options, HttpStatus.OK);
-            else
-                return new ResponseEntity<List<Option>>(HttpStatus.NOT_FOUND);
-
+            return new ResponseEntity<>(options, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<List<Option>>(HttpStatus.INTERNAL_SERVER_ERROR);
-
+            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
 }

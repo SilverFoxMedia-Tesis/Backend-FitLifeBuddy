@@ -19,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -52,21 +53,25 @@ public class MealFoodController {
     }
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Buscar MealFood por Id", notes = "Métodos para encontrar un MealFood por su respectivo Id")
+    @ApiOperation(value = "Buscar MealFood por Id", notes = "Método para encontrar un MealFood por su respectivo Id")
     @ApiResponses({
-            @ApiResponse(code = 201, message = "MealFood encontrado"),
-            @ApiResponse(code = 404, message = "MealFood no encontrado")
+            @ApiResponse(code = 200, message = "MealFood encontrado o lista vacía"),
+            @ApiResponse(code = 500, message = "Error interno del servidor")
     })
-    public ResponseEntity<MealFood> findById(@PathVariable("id") Long id) {
+    public ResponseEntity<List<MealFood>> findById(@PathVariable("id") Long id) {
         try {
             Optional<MealFood> mealFood = mealFoodService.getById(id);
-            if (!mealFood.isPresent())
-                return new ResponseEntity<MealFood>(HttpStatus.NOT_FOUND);
-            return new ResponseEntity<MealFood>(mealFood.get(), HttpStatus.OK);
+            if (!mealFood.isPresent()) {
+                return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
+            }
+            List<MealFood> result = new ArrayList<>();
+            result.add(mealFood.get());
+            return new ResponseEntity<>(result, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<MealFood>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Actualización de datos de MealFood", notes = "Metodo que actualiza los datos de MealFood")

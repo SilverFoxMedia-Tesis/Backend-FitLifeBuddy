@@ -20,6 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -53,21 +54,23 @@ public class DailyController {
         }
     }
 
-
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Buscar Daily por Id", notes = "Métodos para encontrar un Daily por su respectivo Id")
+    @ApiOperation(value = "Buscar Daily por Id", notes = "Método para encontrar un Daily por su respectivo Id")
     @ApiResponses({
-            @ApiResponse(code = 201, message = "Daily encontrado"),
-            @ApiResponse(code = 404, message = "Daily no encontrado")
+            @ApiResponse(code = 200, message = "Daily encontrado o lista vacía"),
+            @ApiResponse(code = 500, message = "Error interno del servidor")
     })
-    public ResponseEntity<Daily> findById(@PathVariable("id") Long id) {
+    public ResponseEntity<List<Daily>> findById(@PathVariable("id") Long id) {
         try {
             Optional<Daily> daily = dailyService.getById(id);
-            if (!daily.isPresent())
-                return new ResponseEntity<Daily>(HttpStatus.NOT_FOUND);
-            return new ResponseEntity<Daily>(daily.get(), HttpStatus.OK);
+            if (!daily.isPresent()) {
+                return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
+            }
+            List<Daily> result = new ArrayList<>();
+            result.add(daily.get());
+            return new ResponseEntity<>(result, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<Daily>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

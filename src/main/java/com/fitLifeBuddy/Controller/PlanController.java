@@ -83,21 +83,25 @@ public class PlanController {
 
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Buscar Plan por Id", notes = "Métodos para encontrar un Plan por su respectivo Id")
+    @ApiOperation(value = "Buscar Plan por Id", notes = "Método para encontrar un Plan por su respectivo Id")
     @ApiResponses({
-            @ApiResponse(code = 201, message = "Plan encontrado"),
-            @ApiResponse(code = 404, message = "Plan no encontrado")
+            @ApiResponse(code = 200, message = "Plan encontrado o lista vacía"),
+            @ApiResponse(code = 500, message = "Error interno del servidor")
     })
-    public ResponseEntity<Plan> findById(@PathVariable("id") Long id) {
+    public ResponseEntity<List<Plan>> findById(@PathVariable("id") Long id) {
         try {
             Optional<Plan> plan = planService.getById(id);
-            if (!plan.isPresent())
-                return new ResponseEntity<Plan>(HttpStatus.NOT_FOUND);
-            return new ResponseEntity<Plan>(plan.get(), HttpStatus.OK);
+            if (!plan.isPresent()) {
+                return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
+            }
+            List<Plan> result = new ArrayList<>();
+            result.add(plan.get());
+            return new ResponseEntity<>(result, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<Plan>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Actualización de datos de Plan", notes = "Metodo que actualiza los datos de Plan")

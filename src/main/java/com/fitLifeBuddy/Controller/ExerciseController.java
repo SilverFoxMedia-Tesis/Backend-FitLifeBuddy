@@ -137,65 +137,48 @@ public class ExerciseController {
         }
     }
 
-
     @GetMapping("searchByTypeExercise/{typeExercise}")
-    @ApiOperation(value = "Buscar Exercise por typeExercise", notes = "Métodos para encontrar un Exercise por su respectivo typeExercise")
+    @ApiOperation(value = "Buscar Exercise por typeExercise", notes = "Método para encontrar un Exercise por su respectivo typeExercise")
     @ApiResponses({
-            @ApiResponse(code = 201, message = "Exercise encontrados"),
-            @ApiResponse(code = 404, message = "Exercise no encontrados")
+            @ApiResponse(code = 200, message = "Exercises encontrados o lista vacía"),
+            @ApiResponse(code = 500, message = "Error interno del servidor")
     })
     public ResponseEntity<List<Exercise>> findByTypeExercise(@PathVariable("typeExercise") TypeExercise typeExercise) {
         try {
             List<Exercise> exercises = exerciseService.findByTypeExercise(typeExercise);
-            if (exercises.size() > 0)
-                return new ResponseEntity<List<Exercise>>(exercises, HttpStatus.OK);
-            else
-                return new ResponseEntity<List<Exercise>>(HttpStatus.NOT_FOUND);
-
+            return new ResponseEntity<>(exercises, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<List<Exercise>>(HttpStatus.INTERNAL_SERVER_ERROR);
-
+            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @GetMapping("searchByBodyPart/{bodyPart}")
-    @ApiOperation(value = "Buscar Exercise por title", notes = "Métodos para encontrar un Exercise por su respectivo bodyPart")
+    @ApiOperation(value = "Buscar Exercise por bodyPart", notes = "Método para encontrar un Exercise por su respectivo bodyPart")
     @ApiResponses({
-            @ApiResponse(code = 201, message = "Exercise encontrados"),
-            @ApiResponse(code = 404, message = "Exercise no encontrados")
+            @ApiResponse(code = 200, message = "Exercises encontrados o lista vacía"),
+            @ApiResponse(code = 500, message = "Error interno del servidor")
     })
     public ResponseEntity<List<Exercise>> findByBodyPart(@PathVariable("bodyPart") BodyPart bodyPart) {
         try {
             List<Exercise> exercises = exerciseService.findByBodyPart(bodyPart);
-            if (exercises.size() > 0)
-                return new ResponseEntity<List<Exercise>>(exercises, HttpStatus.OK);
-            else
-                return new ResponseEntity<List<Exercise>>(HttpStatus.NOT_FOUND);
-
+            return new ResponseEntity<>(exercises, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<List<Exercise>>(HttpStatus.INTERNAL_SERVER_ERROR);
-
+            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-
     @GetMapping("searchRoutineExercisesByIdExercise/{idExercise}")
-    @ApiOperation(value = "Buscar RoutineExercise por Exercise", notes = "Métodos para encontrar un RoutineExercise por su respectivo Exercise")
+    @ApiOperation(value = "Buscar RoutineExercise por Exercise", notes = "Método para encontrar un RoutineExercise por su respectivo Exercise")
     @ApiResponses({
-            @ApiResponse(code = 201, message = "RoutineExercise encontrados"),
-            @ApiResponse(code = 404, message = "RoutineExercise no encontrados")
+            @ApiResponse(code = 200, message = "RoutineExercises encontrados o lista vacía"),
+            @ApiResponse(code = 500, message = "Error interno del servidor")
     })
     public ResponseEntity<List<RoutineExercise>> findRoutineExercisesByIdExercise(@PathVariable("idExercise") Long idExercise) {
         try {
             List<RoutineExercise> routineExercises = exerciseService.findRoutineExercisesByIdExercise(idExercise);
-            if (routineExercises.size() > 0)
-                return new ResponseEntity<List<RoutineExercise>>(routineExercises, HttpStatus.OK);
-            else
-                return new ResponseEntity<List<RoutineExercise>>(HttpStatus.NOT_FOUND);
-
+            return new ResponseEntity<>(routineExercises, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<List<RoutineExercise>>(HttpStatus.INTERNAL_SERVER_ERROR);
-
+            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
