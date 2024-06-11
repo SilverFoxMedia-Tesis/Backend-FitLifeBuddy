@@ -28,6 +28,7 @@ D:\Escritorio\2023-02\Backend\Backend-FitLifeBuddy\src\main\java\com\fitLifeBudd
 D:\Escritorio\2023-02\Backend\Backend-FitLifeBuddy\src\main\java\com\fitLifeBuddy\Service\impl\PersonServiceImpl.java
 D:\Escritorio\2023-02\Backend\Backend-FitLifeBuddy\src\main\java\com\fitLifeBuddy\Service\IMealFoodService.java
 D:\Escritorio\2023-02\Backend\Backend-FitLifeBuddy\src\main\java\com\fitLifeBuddy\Service\CrudService.java
+D:\Escritorio\2023-02\Backend\Backend-FitLifeBuddy\src\main\java\com\fitLifeBuddy\Util\EmailNotificationService.java
 D:\Escritorio\2023-02\Backend\Backend-FitLifeBuddy\src\main\java\com\fitLifeBuddy\Service\impl\RoutineServiceImpl.java
 D:\Escritorio\2023-02\Backend\Backend-FitLifeBuddy\src\main\java\com\fitLifeBuddy\Repository\IRoutineRepository.java
 D:\Escritorio\2023-02\Backend\Backend-FitLifeBuddy\src\main\java\com\fitLifeBuddy\Entity\Enum\PhysicalActivity.java

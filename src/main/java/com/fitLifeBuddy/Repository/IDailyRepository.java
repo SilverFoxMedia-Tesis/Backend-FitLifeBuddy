@@ -17,7 +17,7 @@ import java.util.List;
 public interface IDailyRepository extends JpaRepository<Daily, Long> {
     @Query("select d from Daily d where d.date = :dateDaily and d.plan.pacient.idPacient = :idPacient")
     public List<Daily> findByDateAndPatientId(@Param("dateDaily") Date date, @Param("idPacient") Long idPacient);
-    @Query("select d from Daily d where d.date = :dateDaily")
+    @Query("select d from Daily d join fetch d.plan p join fetch p.pacient pac join fetch pac.person where d.date = :dateDaily")
     public List<Daily> findByDate(@Param("dateDaily") Date date);
     @Query("select d.meals from Daily d where d.idDaily = :dailyId")
     public List<Meal> findMealsByIdDaily(@Param("dailyId")Long idDaily);

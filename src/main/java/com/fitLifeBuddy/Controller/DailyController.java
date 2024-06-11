@@ -253,4 +253,27 @@ public class DailyController {
         }
     }
 
+    @GetMapping("/confirm/{idDaily}")
+    @ApiOperation(value = "Confirmar Daily", notes = "Método para confirmar un Daily y cambiar su estado a COMPLETED")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Daily confirmado"),
+            @ApiResponse(code = 404, message = "Daily no encontrado"),
+            @ApiResponse(code = 500, message = "Error interno del servidor")
+    })
+    public ResponseEntity<String> confirmDaily(@PathVariable("idDaily") Long idDaily) {
+        try {
+            Optional<Daily> dailyOptional = dailyService.getById(idDaily);
+            if (!dailyOptional.isPresent()) {
+                return new ResponseEntity<>("Daily no encontrado", HttpStatus.NOT_FOUND);
+            }
+
+            Daily daily = dailyOptional.get();
+            daily.setStatus(Status.COMPLETED);
+            dailyService.save(daily);
+
+            return new ResponseEntity<>("Daily confirmado", HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Error interno del servidor", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }
