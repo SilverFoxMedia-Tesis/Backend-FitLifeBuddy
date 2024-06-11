@@ -2,10 +2,7 @@ package com.fitLifeBuddy.Entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fitLifeBuddy.Entity.Enum.ClassificationIMC;
-import com.fitLifeBuddy.Entity.Enum.DietType;
-import com.fitLifeBuddy.Entity.Enum.Frecuently;
-import com.fitLifeBuddy.Entity.Enum.Status;
+import com.fitLifeBuddy.Entity.Enum.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -25,12 +22,17 @@ public class Plan implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idPlan;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "Frecuently", nullable = false, length = 20)
     private Frecuently frecuently;
     @Enumerated(EnumType.STRING)
     @Column(name = "DietType", nullable = false, length = 20)
     private DietType dietType;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "GoalType", nullable = false, length = 20)
+    private GoalType goalType;
+    //VALORES CREADOS
     @Column(name = "TMB", nullable = false)
     private Float tmb;
     @Column(name = "Carbohydrates_g", nullable = false)

@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,39 +29,41 @@ public class ExerciseController {
     private IExerciseService exerciseService;
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Listar Exercises", notes = "Metodo para listar a todos los Exercises")
+    @ApiOperation(value = "Listar Exercises", notes = "Método para listar a todos los Exercises")
     @ApiResponses({
-            @ApiResponse(code = 201, message = "Exercises encontrados"),
-            @ApiResponse(code = 404, message = "Exercises no encontrados")
+            @ApiResponse(code = 200, message = "Exercises encontrados o lista vacía"),
+            @ApiResponse(code = 500, message = "Error interno del servidor")
     })
-    public ResponseEntity<List<Exercise>> findAll(){
+    public ResponseEntity<List<Exercise>> findAll() {
         try {
             List<Exercise> exercises = exerciseService.getAll();
-            if (exercises.size() > 0)
-                return new ResponseEntity<List<Exercise>>(exercises, HttpStatus.OK);
-            else
-                return new ResponseEntity<List<Exercise>>(HttpStatus.NOT_FOUND);
-        } catch (Exception ex){
+            return new ResponseEntity<List<Exercise>>(exercises, HttpStatus.OK);
+        } catch (Exception ex) {
             return new ResponseEntity<List<Exercise>>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
+
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Buscar Exercise por Id", notes = "Métodos para encontrar un Exercise por su respectivo Id")
+    @ApiOperation(value = "Buscar Exercise por Id", notes = "Método para encontrar un Exercise por su respectivo Id")
     @ApiResponses({
-            @ApiResponse(code = 201, message = "Exercise encontrado"),
-            @ApiResponse(code = 404, message = "Exercise no encontrado")
+            @ApiResponse(code = 200, message = "Exercise encontrado o lista vacía"),
+            @ApiResponse(code = 500, message = "Error interno del servidor")
     })
-    public ResponseEntity<Exercise> findById(@PathVariable("id") Long id) {
+    public ResponseEntity<List<Exercise>> findById(@PathVariable("id") Long id) {
         try {
             Optional<Exercise> exercise = exerciseService.getById(id);
-            if (!exercise.isPresent())
-                return new ResponseEntity<Exercise>(HttpStatus.NOT_FOUND);
-            return new ResponseEntity<Exercise>(exercise.get(), HttpStatus.OK);
+            if (!exercise.isPresent()) {
+                return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
+            }
+            List<Exercise> result = new ArrayList<>();
+            result.add(exercise.get());
+            return new ResponseEntity<>(result, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<Exercise>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Actualización de datos de Exercise", notes = "Metodo que actualiza los datos de Exercise")
@@ -120,24 +123,20 @@ public class ExerciseController {
     }
 
     @GetMapping("searchByWorkout/{workout}")
-    @ApiOperation(value = "Buscar Exercise por Workout", notes = "Métodos para encontrar un Workout por su respectivo title")
+    @ApiOperation(value = "Buscar Exercise por Workout", notes = "Método para encontrar un Workout por su respectivo title")
     @ApiResponses({
-            @ApiResponse(code = 201, message = "Workout encontrados"),
-            @ApiResponse(code = 404, message = "Workout no encontrados")
+            @ApiResponse(code = 200, message = "Workout encontrados o lista vacía"),
+            @ApiResponse(code = 500, message = "Error interno del servidor")
     })
     public ResponseEntity<List<Exercise>> findByWorkout(@PathVariable("workout") String workout) {
         try {
             List<Exercise> exercises = exerciseService.findByWorkout(workout);
-            if (exercises.size() > 0)
-                return new ResponseEntity<List<Exercise>>(exercises, HttpStatus.OK);
-            else
-                return new ResponseEntity<List<Exercise>>(HttpStatus.NOT_FOUND);
-
+            return new ResponseEntity<List<Exercise>>(exercises, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<List<Exercise>>(HttpStatus.INTERNAL_SERVER_ERROR);
-
+            return new ResponseEntity<List<Exercise>>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
 
     @GetMapping("searchByTypeExercise/{typeExercise}")
     @ApiOperation(value = "Buscar Exercise por typeExercise", notes = "Métodos para encontrar un Exercise por su respectivo typeExercise")

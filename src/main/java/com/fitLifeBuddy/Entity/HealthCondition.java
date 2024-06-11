@@ -17,7 +17,7 @@ public class HealthCondition implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idHealthCondition;
-    @Column(name = "NameHealthCondition", nullable = false,length = 20)
+    @Column(name = "NameHealthCondition", nullable = false,length = 50)
     private String nameHealthCondition;
     @Column(name = "DescriptionHealthCondition", nullable = false,length = 50)
     private String descriptionHealthCondition;

@@ -44,6 +44,7 @@ com\fitLifeBuddy\Service\impl\NutriotionistServiceImpl.class
 com\fitLifeBuddy\Service\IOptionService.class
 com\fitLifeBuddy\Repository\IFoodConditionRepository.class
 com\fitLifeBuddy\Service\impl\FoodServiceImpl.class
+com\fitLifeBuddy\Entity\Enum\GoalType.class
 com\fitLifeBuddy\Service\impl\CalculationService.class
 com\fitLifeBuddy\Entity\Enum\TimeMeal.class
 com\fitLifeBuddy\Service\IHealthConditionService.class

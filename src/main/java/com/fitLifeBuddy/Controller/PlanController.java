@@ -153,6 +153,7 @@ public class PlanController {
 
             logger.debug("Setting frecuently from DTO");
             plan.setFrecuently(planDTO.getFrecuently());
+            plan.setGoalType(planDTO.getGoalType());
             plan.setPacient(pacientOpt.get());
             logger.debug("Setting diet type from latest history");
 

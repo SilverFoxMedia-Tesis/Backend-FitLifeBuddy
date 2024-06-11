@@ -18,7 +18,7 @@ public class FoodCondition implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idFoodCondition;
-    @Column(name = "NameFoodCondition", nullable = false,length = 20)
+    @Column(name = "NameFoodCondition", nullable = false,length = 50)
     private String nameFoodCondition;
     @Column(name = "DescriptionFoodCondition", nullable = false,length = 50)
     private String descriptionFoodCondition;
