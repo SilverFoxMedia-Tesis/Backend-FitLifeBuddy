@@ -45,27 +45,24 @@ public class RoutineController {
         }
     }
 
-
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Buscar Routine por Id", notes = "Método para encontrar un Routine por su respectivo Id")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "Routine encontrado o lista vacía"),
+            @ApiResponse(code = 200, message = "Routine encontrado"),
+            @ApiResponse(code = 404, message = "Routine no encontrado"),
             @ApiResponse(code = 500, message = "Error interno del servidor")
     })
-    public ResponseEntity<List<Routine>> findById(@PathVariable("id") Long id) {
+    public ResponseEntity<Routine> findById(@PathVariable("id") Long id) {
         try {
             Optional<Routine> routine = routineService.getById(id);
             if (!routine.isPresent()) {
-                return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
-            List<Routine> result = new ArrayList<>();
-            result.add(routine.get());
-            return new ResponseEntity<>(result, HttpStatus.OK);
+            return new ResponseEntity<>(routine.get(), HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Actualización de datos de Routine", notes = "Metodo que actualiza los datos de Routine")

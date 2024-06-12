@@ -11,6 +11,6 @@ import java.util.List;
 
 @Repository
 public interface IRoutineRepository extends JpaRepository<Routine, Long> {
-    @Query("select re from RoutineExercise re where re.exercise.idExercise = :routineId")
+    @Query("select re from RoutineExercise re where re.routine.idRoutine = :routineId")
     public List<RoutineExercise> findRoutineExercisesByIdRoutine(@Param("routineId") Long idRoutine);
 }

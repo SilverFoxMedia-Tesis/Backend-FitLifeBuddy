@@ -46,24 +46,22 @@ public class QuestionController {
         }
     }
 
-
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Buscar Question por Id", notes = "Método para encontrar un Question por su respectivo Id")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "Question encontrado o lista vacía"),
+            @ApiResponse(code = 200, message = "Question encontrado"),
+            @ApiResponse(code = 404, message = "Question no encontrado"),
             @ApiResponse(code = 500, message = "Error interno del servidor")
     })
-    public ResponseEntity<List<Question>> findById(@PathVariable("id") Long id) {
+    public ResponseEntity<Question> findById(@PathVariable("id") Long id) {
         try {
             Optional<Question> question = questionService.getById(id);
             if (!question.isPresent()) {
-                return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
-            List<Question> result = new ArrayList<>();
-            result.add(question.get());
-            return new ResponseEntity<>(result, HttpStatus.OK);
+            return new ResponseEntity<>(question.get(), HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

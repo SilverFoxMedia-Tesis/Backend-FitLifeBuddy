@@ -43,27 +43,24 @@ public class ExerciseController {
         }
     }
 
-
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Buscar Exercise por Id", notes = "Método para encontrar un Exercise por su respectivo Id")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "Exercise encontrado o lista vacía"),
+            @ApiResponse(code = 200, message = "Exercise encontrado"),
+            @ApiResponse(code = 404, message = "Exercise no encontrado"),
             @ApiResponse(code = 500, message = "Error interno del servidor")
     })
-    public ResponseEntity<List<Exercise>> findById(@PathVariable("id") Long id) {
+    public ResponseEntity<Exercise> findById(@PathVariable("id") Long id) {
         try {
             Optional<Exercise> exercise = exerciseService.getById(id);
             if (!exercise.isPresent()) {
-                return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
-            List<Exercise> result = new ArrayList<>();
-            result.add(exercise.get());
-            return new ResponseEntity<>(result, HttpStatus.OK);
+            return new ResponseEntity<>(exercise.get(), HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Actualización de datos de Exercise", notes = "Metodo que actualiza los datos de Exercise")

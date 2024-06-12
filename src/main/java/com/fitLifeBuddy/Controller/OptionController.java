@@ -46,27 +46,24 @@ public class OptionController {
         }
     }
 
-
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Buscar Option por Id", notes = "Método para encontrar un Option por su respectivo Id")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "Option encontrado o lista vacía"),
+            @ApiResponse(code = 200, message = "Option encontrado"),
+            @ApiResponse(code = 404, message = "Option no encontrado"),
             @ApiResponse(code = 500, message = "Error interno del servidor")
     })
-    public ResponseEntity<List<Option>> findById(@PathVariable("id") Long id) {
+    public ResponseEntity<Option> findById(@PathVariable("id") Long id) {
         try {
             Optional<Option> option = optionService.getById(id);
             if (!option.isPresent()) {
-                return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
-            List<Option> result = new ArrayList<>();
-            result.add(option.get());
-            return new ResponseEntity<>(result, HttpStatus.OK);
+            return new ResponseEntity<>(option.get(), HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Actualización de datos de Option", notes = "Metodo que actualiza los datos de Option")

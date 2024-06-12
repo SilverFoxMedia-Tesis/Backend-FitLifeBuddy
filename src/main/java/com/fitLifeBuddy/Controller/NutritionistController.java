@@ -47,27 +47,24 @@ public class NutritionistController {
         }
     }
 
-
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Buscar Nutritionist por Id", notes = "Método para encontrar un Nutritionist por su respectivo Id")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "Nutritionist encontrado o lista vacía"),
+            @ApiResponse(code = 200, message = "Nutritionist encontrado"),
+            @ApiResponse(code = 404, message = "Nutritionist no encontrado"),
             @ApiResponse(code = 500, message = "Error interno del servidor")
     })
-    public ResponseEntity<List<Nutritionist>> findById(@PathVariable("id") Long id) {
+    public ResponseEntity<Nutritionist> findById(@PathVariable("id") Long id) {
         try {
             Optional<Nutritionist> nutritionist = nutritionistService.getById(id);
             if (!nutritionist.isPresent()) {
-                return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
-            List<Nutritionist> result = new ArrayList<>();
-            result.add(nutritionist.get());
-            return new ResponseEntity<>(result, HttpStatus.OK);
+            return new ResponseEntity<>(nutritionist.get(), HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
 
 
     @GetMapping("searchPacientsByIdNutritionist/{idNutritionist}")
@@ -84,8 +81,6 @@ public class NutritionistController {
             return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
-
 
     @PostMapping(value = "{idPerson}",consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Registro de Nutritionist", notes = "Método que registra Nutritionists en BD")

@@ -55,23 +55,21 @@ public class FoodController {
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Buscar Food por Id", notes = "Método para encontrar un Food por su respectivo Id")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "Food encontrado o lista vacía"),
+            @ApiResponse(code = 200, message = "Food encontrado"),
+            @ApiResponse(code = 404, message = "Food no encontrado"),
             @ApiResponse(code = 500, message = "Error interno del servidor")
     })
-    public ResponseEntity<List<Food>> findById(@PathVariable("id") Long id) {
+    public ResponseEntity<Food> findById(@PathVariable("id") Long id) {
         try {
             Optional<Food> food = foodService.getById(id);
             if (!food.isPresent()) {
-                return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
-            List<Food> result = new ArrayList<>();
-            result.add(food.get());
-            return new ResponseEntity<>(result, HttpStatus.OK);
+            return new ResponseEntity<>(food.get(), HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Actualización de datos de Food", notes = "Metodo que actualiza los datos de Food")

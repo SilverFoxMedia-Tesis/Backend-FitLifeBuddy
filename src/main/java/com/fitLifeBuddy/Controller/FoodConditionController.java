@@ -50,20 +50,19 @@ public class FoodConditionController {
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Buscar FoodCondition por Id", notes = "Método para encontrar un FoodCondition por su respectivo Id")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "FoodCondition encontrado o lista vacía"),
+            @ApiResponse(code = 200, message = "FoodCondition encontrado"),
+            @ApiResponse(code = 404, message = "FoodCondition no encontrado"),
             @ApiResponse(code = 500, message = "Error interno del servidor")
     })
-    public ResponseEntity<List<FoodCondition>> findById(@PathVariable("id") Long id) {
+    public ResponseEntity<FoodCondition> findById(@PathVariable("id") Long id) {
         try {
             Optional<FoodCondition> foodCondition = foodConditionService.getById(id);
             if (!foodCondition.isPresent()) {
-                return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
-            List<FoodCondition> result = new ArrayList<>();
-            result.add(foodCondition.get());
-            return new ResponseEntity<>(result, HttpStatus.OK);
+            return new ResponseEntity<>(foodCondition.get(), HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

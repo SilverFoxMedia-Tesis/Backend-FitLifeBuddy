@@ -54,20 +54,19 @@ public class MealController {
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Buscar Meal por Id", notes = "Método para encontrar un Meal por su respectivo Id")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "Meal encontrado o lista vacía"),
+            @ApiResponse(code = 200, message = "Meal encontrado"),
+            @ApiResponse(code = 404, message = "Meal no encontrado"),
             @ApiResponse(code = 500, message = "Error interno del servidor")
     })
-    public ResponseEntity<List<Meal>> findById(@PathVariable("id") Long id) {
+    public ResponseEntity<Meal> findById(@PathVariable("id") Long id) {
         try {
             Optional<Meal> meal = mealService.getById(id);
             if (!meal.isPresent()) {
-                return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
-            List<Meal> result = new ArrayList<>();
-            result.add(meal.get());
-            return new ResponseEntity<>(result, HttpStatus.OK);
+            return new ResponseEntity<>(meal.get(), HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

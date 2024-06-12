@@ -43,22 +43,22 @@ public class PersonController {
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Buscar Person por Id", notes = "Método para encontrar un Person por su respectivo Id")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "Person encontrado o lista vacía"),
+            @ApiResponse(code = 200, message = "Person encontrado"),
+            @ApiResponse(code = 404, message = "Person no encontrado"),
             @ApiResponse(code = 500, message = "Error interno del servidor")
     })
-    public ResponseEntity<List<Person>> findById(@PathVariable("id") Long id) {
+    public ResponseEntity<Person> findById(@PathVariable("id") Long id) {
         try {
             Optional<Person> person = personService.getById(id);
             if (!person.isPresent()) {
-                return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
-            List<Person> result = new ArrayList<>();
-            result.add(person.get());
-            return new ResponseEntity<>(result, HttpStatus.OK);
+            return new ResponseEntity<>(person.get(), HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
 
     @GetMapping("searchByEmailAddress/{emailAddress}")
     @ApiOperation(value = "Buscar Person por emailAddress", notes = "Método para encontrar un Person por su respectivo emailAddress")

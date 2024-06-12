@@ -57,20 +57,19 @@ public class DailyController {
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Buscar Daily por Id", notes = "Método para encontrar un Daily por su respectivo Id")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "Daily encontrado o lista vacía"),
+            @ApiResponse(code = 200, message = "Daily encontrado"),
+            @ApiResponse(code = 404, message = "Daily no encontrado"),
             @ApiResponse(code = 500, message = "Error interno del servidor")
     })
-    public ResponseEntity<List<Daily>> findById(@PathVariable("id") Long id) {
+    public ResponseEntity<Daily> findById(@PathVariable("id") Long id) {
         try {
             Optional<Daily> daily = dailyService.getById(id);
             if (!daily.isPresent()) {
-                return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
-            List<Daily> result = new ArrayList<>();
-            result.add(daily.get());
-            return new ResponseEntity<>(result, HttpStatus.OK);
+            return new ResponseEntity<>(daily.get(), HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

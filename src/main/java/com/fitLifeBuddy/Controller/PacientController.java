@@ -51,27 +51,24 @@ public class PacientController {
         }
     }
 
-
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Buscar Pacient por Id", notes = "Método para encontrar un Pacient por su respectivo Id")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "Pacient encontrado o lista vacía"),
+            @ApiResponse(code = 200, message = "Pacient encontrado"),
+            @ApiResponse(code = 404, message = "Pacient no encontrado"),
             @ApiResponse(code = 500, message = "Error interno del servidor")
     })
-    public ResponseEntity<List<Pacient>> findById(@PathVariable("id") Long id) {
+    public ResponseEntity<Pacient> findById(@PathVariable("id") Long id) {
         try {
             Optional<Pacient> pacient = pacientService.getById(id);
             if (!pacient.isPresent()) {
-                return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
-            List<Pacient> result = new ArrayList<>();
-            result.add(pacient.get());
-            return new ResponseEntity<>(result, HttpStatus.OK);
+            return new ResponseEntity<>(pacient.get(), HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
 
     @PostMapping(value = "/{idPerson}/{idNutritionist}",consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Registro de Pacients", notes = "Método que registra Pacients en BD")

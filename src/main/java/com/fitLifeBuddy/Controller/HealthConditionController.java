@@ -51,22 +51,22 @@ public class HealthConditionController {
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Buscar HealthCondition por Id", notes = "Método para encontrar un HealthCondition por su respectivo Id")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "HealthCondition encontrado o lista vacía"),
+            @ApiResponse(code = 200, message = "HealthCondition encontrado"),
+            @ApiResponse(code = 404, message = "HealthCondition no encontrado"),
             @ApiResponse(code = 500, message = "Error interno del servidor")
     })
-    public ResponseEntity<List<HealthCondition>> findById(@PathVariable("id") Long id) {
+    public ResponseEntity<HealthCondition> findById(@PathVariable("id") Long id) {
         try {
             Optional<HealthCondition> healthCondition = healthConditionService.getById(id);
             if (!healthCondition.isPresent()) {
-                return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
-            List<HealthCondition> result = new ArrayList<>();
-            result.add(healthCondition.get());
-            return new ResponseEntity<>(result, HttpStatus.OK);
+            return new ResponseEntity<>(healthCondition.get(), HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Actualización de datos de HealthCondition", notes = "Metodo que actualiza los datos de HealthCondition")

@@ -50,24 +50,22 @@ public class RoutineExerciseController {
         }
     }
 
-
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Buscar RoutineExercise por Id", notes = "Método para encontrar un RoutineExercise por su respectivo Id")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "RoutineExercise encontrado o lista vacía"),
+            @ApiResponse(code = 200, message = "RoutineExercise encontrado"),
+            @ApiResponse(code = 404, message = "RoutineExercise no encontrado"),
             @ApiResponse(code = 500, message = "Error interno del servidor")
     })
-    public ResponseEntity<List<RoutineExercise>> findById(@PathVariable("id") Long id) {
+    public ResponseEntity<RoutineExercise> findById(@PathVariable("id") Long id) {
         try {
             Optional<RoutineExercise> routineExercise = routineExerciseService.getById(id);
             if (!routineExercise.isPresent()) {
-                return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
-            List<RoutineExercise> result = new ArrayList<>();
-            result.add(routineExercise.get());
-            return new ResponseEntity<>(result, HttpStatus.OK);
+            return new ResponseEntity<>(routineExercise.get(), HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
