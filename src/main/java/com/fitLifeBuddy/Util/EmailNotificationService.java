@@ -1,6 +1,7 @@
 package com.fitLifeBuddy.Util;
 
 import com.fitLifeBuddy.Entity.Daily;
+import com.fitLifeBuddy.Entity.Enum.Status;
 import com.fitLifeBuddy.Entity.Person;
 import com.fitLifeBuddy.Service.IDailyService;
 import com.fitLifeBuddy.Service.IPersonService;
@@ -30,24 +31,26 @@ public class EmailNotificationService {
     @Autowired
     private IPersonService personService;
 
-    @Scheduled(cron = "0 0 8 * * ?") // Programado para ejecutarse todos los días a las 8 AM
+    @Scheduled(cron = "0 0 20 * * ?") // Programado para ejecutarse todos los días a las 8 PM
     public void sendDailyEmails() {
         Date today = new Date();
         try {
             List<Daily> dailies = dailyService.findByDate(today);
             logger.info("Dailies found: {}", dailies.size());
             for (Daily daily : dailies) {
-                if (daily.getPlan() != null && daily.getPlan().getPacient() != null) {
-                    Person person = daily.getPlan().getPacient().getPerson();
-                    if (person != null) {
-                        logger.info("Sending email to: {}", person.getEmailAddress());
-                        sendEmail(person.getEmailAddress(), "Confirmación de Actividades Diarias",
-                                buildEmailContent(person.getFullname(), daily.getIdDaily()));
+                if (daily.getStatus() == Status.UNFILLED) {
+                    if (daily.getPlan() != null && daily.getPlan().getPacient() != null) {
+                        Person person = daily.getPlan().getPacient().getPerson();
+                        if (person != null) {
+                            logger.info("Sending email to: {}", person.getEmailAddress());
+                            sendEmail(person.getEmailAddress(), "Confirmación de Actividades Diarias",
+                                    buildEmailContent(person.getFullname(), daily.getIdDaily()));
+                        } else {
+                            logger.warn("Person not found for daily id: {}", daily.getIdDaily());
+                        }
                     } else {
-                        logger.warn("Person not found for daily id: {}", daily.getIdDaily());
+                        logger.warn("Plan or Pacient not found for daily id: {}", daily.getIdDaily());
                     }
-                } else {
-                    logger.warn("Plan or Pacient not found for daily id: {}", daily.getIdDaily());
                 }
             }
         } catch (Exception e) {
