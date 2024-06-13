@@ -53,6 +53,7 @@ com\fitLifeBuddy\Service\IDailyService.class
 com\fitLifeBuddy\Entity\Feedback.class
 com\fitLifeBuddy\Service\impl\PacientHistoryServiceImpl.class
 com\fitLifeBuddy\Util\RestClientConfiguration.class
+com\fitLifeBuddy\Entity\Notification.class
 com\fitLifeBuddy\Service\IMealService.class
 com\fitLifeBuddy\Repository\IPlanRepository.class
 com\fitLifeBuddy\Entity\DTO\DailyDTO.class
@@ -69,6 +70,8 @@ com\fitLifeBuddy\Repository\IRoutineExerciseRepository.class
 com\fitLifeBuddy\Service\IExerciseService.class
 com\fitLifeBuddy\Controller\FeedbackController.class
 com\fitLifeBuddy\Service\impl\FeedbackServiceImpl.class
+com\fitLifeBuddy\Controller\NotificationController.class
+com\fitLifeBuddy\Service\INotificationService.class
 com\fitLifeBuddy\Repository\IPersonRepository.class
 com\fitLifeBuddy\Service\impl\PacientServiceImpl.class
 com\fitLifeBuddy\Entity\Meal.class
@@ -94,6 +97,7 @@ com\fitLifeBuddy\Repository\IExerciseRepository.class
 com\fitLifeBuddy\Entity\Enum\Frecuently.class
 com\fitLifeBuddy\Service\IMealFoodService.class
 com\fitLifeBuddy\Controller\QuestionController.class
+com\fitLifeBuddy\Repository\INotificationRepository.class
 com\fitLifeBuddy\Repository\IPacientHistoryRepository.class
 com\fitLifeBuddy\Service\IRoutineExerciseService.class
 com\fitLifeBuddy\Controller\PacientController.class
@@ -106,6 +110,7 @@ com\fitLifeBuddy\Entity\Enum\Gender.class
 com\fitLifeBuddy\Controller\PacientHistoryController.class
 com\fitLifeBuddy\Entity\MealFood.class
 com\fitLifeBuddy\Repository\IOptionRepository.class
+com\fitLifeBuddy\Service\impl\NotificationServiceImpl.class
 com\fitLifeBuddy\Entity\Exercise.class
 com\fitLifeBuddy\Service\impl\OptionServiceImpl.class
 com\fitLifeBuddy\Entity\Enum\TypeHealthCondition.class

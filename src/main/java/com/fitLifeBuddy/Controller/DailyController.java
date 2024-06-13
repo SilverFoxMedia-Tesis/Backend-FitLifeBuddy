@@ -275,4 +275,25 @@ public class DailyController {
             return new ResponseEntity<>("Error interno del servidor", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @GetMapping("/unfilledUntilToday/{idPlan}")
+    @ApiOperation(value = "Buscar Dailies no completados hasta la fecha actual", notes = "Método para encontrar Dailies no completados hasta la fecha actual para un plan específico")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Dailies no completados encontrados"),
+            @ApiResponse(code = 404, message = "No se encontraron Dailies no completados"),
+            @ApiResponse(code = 500, message = "Error interno del servidor")
+    })
+    public ResponseEntity<List<Daily>> findUnfilledDailiesUntilToday(@PathVariable("idPlan") Long idPlan) {
+        try {
+            Date today = new Date();
+            List<Daily> dailies = dailyService.findUnfilledDailiesUntilToday(today, Status.UNFILLED, idPlan);
+            if (dailies.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+            return new ResponseEntity<>(dailies, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 }

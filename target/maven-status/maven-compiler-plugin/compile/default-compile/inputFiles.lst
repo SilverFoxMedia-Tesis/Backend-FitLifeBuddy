@@ -11,6 +11,7 @@ D:\Escritorio\2023-02\Backend\Backend-FitLifeBuddy\src\main\java\com\fitLifeBudd
 D:\Escritorio\2023-02\Backend\Backend-FitLifeBuddy\src\main\java\com\fitLifeBuddy\Service\impl\CalculationService.java
 D:\Escritorio\2023-02\Backend\Backend-FitLifeBuddy\src\main\java\com\fitLifeBuddy\Service\impl\FoodServiceImpl.java
 D:\Escritorio\2023-02\Backend\Backend-FitLifeBuddy\src\main\java\com\fitLifeBuddy\Entity\Enum\TypeHealthCondition.java
+D:\Escritorio\2023-02\Backend\Backend-FitLifeBuddy\src\main\java\com\fitLifeBuddy\Entity\Notification.java
 D:\Escritorio\2023-02\Backend\Backend-FitLifeBuddy\src\main\java\com\fitLifeBuddy\Entity\HealthCondition.java
 D:\Escritorio\2023-02\Backend\Backend-FitLifeBuddy\src\main\java\com\fitLifeBuddy\Entity\Enum\ClassificationIMC.java
 D:\Escritorio\2023-02\Backend\Backend-FitLifeBuddy\src\main\java\com\fitLifeBuddy\Controller\DailyController.java
@@ -22,6 +23,7 @@ D:\Escritorio\2023-02\Backend\Backend-FitLifeBuddy\src\main\java\com\fitLifeBudd
 D:\Escritorio\2023-02\Backend\Backend-FitLifeBuddy\src\main\java\com\fitLifeBuddy\Entity\Routine.java
 D:\Escritorio\2023-02\Backend\Backend-FitLifeBuddy\src\main\java\com\fitLifeBuddy\Service\impl\FoodConditionServiceImpl.java
 D:\Escritorio\2023-02\Backend\Backend-FitLifeBuddy\src\main\java\com\fitLifeBuddy\Service\impl\RoutineExerciseServiceImpl.java
+D:\Escritorio\2023-02\Backend\Backend-FitLifeBuddy\src\main\java\com\fitLifeBuddy\Service\INotificationService.java
 D:\Escritorio\2023-02\Backend\Backend-FitLifeBuddy\src\main\java\com\fitLifeBuddy\Repository\IRoutineExerciseRepository.java
 D:\Escritorio\2023-02\Backend\Backend-FitLifeBuddy\src\main\java\com\fitLifeBuddy\Entity\Enum\GoalType.java
 D:\Escritorio\2023-02\Backend\Backend-FitLifeBuddy\src\main\java\com\fitLifeBuddy\Service\IMealService.java
@@ -75,6 +77,7 @@ D:\Escritorio\2023-02\Backend\Backend-FitLifeBuddy\src\main\java\com\fitLifeBudd
 D:\Escritorio\2023-02\Backend\Backend-FitLifeBuddy\src\main\java\com\fitLifeBuddy\Controller\MealFoodController.java
 D:\Escritorio\2023-02\Backend\Backend-FitLifeBuddy\src\main\java\com\fitLifeBuddy\Repository\IExerciseRepository.java
 D:\Escritorio\2023-02\Backend\Backend-FitLifeBuddy\src\main\java\com\fitLifeBuddy\Controller\PersonController.java
+D:\Escritorio\2023-02\Backend\Backend-FitLifeBuddy\src\main\java\com\fitLifeBuddy\Repository\INotificationRepository.java
 D:\Escritorio\2023-02\Backend\Backend-FitLifeBuddy\src\main\java\com\fitLifeBuddy\Entity\Enum\TypeExercise.java
 D:\Escritorio\2023-02\Backend\Backend-FitLifeBuddy\src\main\java\com\fitLifeBuddy\Controller\PacientController.java
 D:\Escritorio\2023-02\Backend\Backend-FitLifeBuddy\src\main\java\com\fitLifeBuddy\Repository\IHealthConditionRepository.java
@@ -100,7 +103,9 @@ D:\Escritorio\2023-02\Backend\Backend-FitLifeBuddy\src\main\java\com\fitLifeBudd
 D:\Escritorio\2023-02\Backend\Backend-FitLifeBuddy\src\main\java\com\fitLifeBuddy\Entity\Enum\BodyPart.java
 D:\Escritorio\2023-02\Backend\Backend-FitLifeBuddy\src\main\java\com\fitLifeBuddy\Service\impl\PacientServiceImpl.java
 D:\Escritorio\2023-02\Backend\Backend-FitLifeBuddy\src\main\java\com\fitLifeBuddy\Service\impl\FeedbackServiceImpl.java
+D:\Escritorio\2023-02\Backend\Backend-FitLifeBuddy\src\main\java\com\fitLifeBuddy\Service\impl\NotificationServiceImpl.java
 D:\Escritorio\2023-02\Backend\Backend-FitLifeBuddy\src\main\java\com\fitLifeBuddy\Entity\DTO\PlanDTO.java
+D:\Escritorio\2023-02\Backend\Backend-FitLifeBuddy\src\main\java\com\fitLifeBuddy\Controller\NotificationController.java
 D:\Escritorio\2023-02\Backend\Backend-FitLifeBuddy\src\main\java\com\fitLifeBuddy\Service\IHealthConditionService.java
 D:\Escritorio\2023-02\Backend\Backend-FitLifeBuddy\src\main\java\com\fitLifeBuddy\Service\IFeedbackService.java
 D:\Escritorio\2023-02\Backend\Backend-FitLifeBuddy\src\main\java\com\fitLifeBuddy\Entity\Question.java

@@ -5,5 +5,7 @@ public enum Status {
     CANCELED,
     COMPLETED,
     UNFILLED,
-    STOPPED
+    STOPPED,
+    ACCEPTED,
+    PENDING
 }

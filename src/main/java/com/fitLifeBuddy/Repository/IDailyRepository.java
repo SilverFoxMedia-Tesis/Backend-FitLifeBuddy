@@ -25,4 +25,6 @@ public interface IDailyRepository extends JpaRepository<Daily, Long> {
     public List<Routine> findRoutinesByIdDaily(@Param("dailyId")Long idDaily);
     @Query("SELECT d FROM Daily d WHERE d.date = :dateDaily AND d.status = :status AND d.plan.pacient.idPacient = :idPacient")
     public List<Daily> findByDateAndStatus(@Param("dateDaily") Date date, @Param("status") Status status, @Param("idPacient") Long idPacient);
+    @Query("SELECT d FROM Daily d WHERE d.date <= :dateDaily AND d.status = :status AND d.plan.idPlan = :idPlan")
+    public List<Daily> findUnfilledDailiesUntilToday(@Param("dateDaily") Date dateDaily, @Param("status") Status status, @Param("idPlan") Long idPlan);
 }

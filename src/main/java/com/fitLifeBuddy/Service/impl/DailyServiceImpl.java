@@ -67,4 +67,9 @@ public class DailyServiceImpl implements IDailyService {
     public List<Daily> findDailyByDateAndStatusUnfilled(Date date, Long idPacient) throws Exception {
         return dailyRepository.findByDateAndStatus(date, Status.UNFILLED, idPacient );
     }
+
+    @Override
+    public List<Daily> findUnfilledDailiesUntilToday(Date dateDaily, Status status, Long idPlan) throws Exception {
+        return dailyRepository.findUnfilledDailiesUntilToday(dateDaily, Status.UNFILLED, idPlan);
+    }
 }
