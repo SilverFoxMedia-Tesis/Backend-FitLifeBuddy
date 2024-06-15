@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -32,7 +33,9 @@ public class FeedbackServiceImpl implements IFeedbackService {
 
     @Override
     public List<Feedback> getAll() throws Exception {
-        return feedbackRepository.findAll();
+        return feedbackRepository.findAll().stream()
+                .sorted((f1, f2) -> f1.getIdFeedback().compareTo(f2.getIdFeedback()))
+                .collect(Collectors.toList());
     }
 
     @Override

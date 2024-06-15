@@ -36,7 +36,9 @@ public class MealServiceImpl implements IMealService {
 
     @Override
     public List<Meal> getAll() throws Exception {
-        return mealRepository.findAll();
+        return mealRepository.findAll().stream()
+                .sorted((m1, m2) -> m1.getIdMeal().compareTo(m2.getIdMeal()))
+                .collect(Collectors.toList());
     }
 
     @Override

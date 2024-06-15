@@ -33,7 +33,7 @@ public class Notification implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date date;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "idPerson", nullable = false)
     private Person person;
 }

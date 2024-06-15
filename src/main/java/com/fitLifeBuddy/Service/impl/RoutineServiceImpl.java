@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -31,7 +32,9 @@ public class RoutineServiceImpl implements IRoutineService {
 
     @Override
     public List<Routine> getAll() throws Exception {
-        return routineRepository.findAll();
+        return routineRepository.findAll().stream()
+                .sorted((r1, r2) -> r1.getIdRoutine().compareTo(r2.getIdRoutine()))
+                .collect(Collectors.toList());
     }
 
     @Override

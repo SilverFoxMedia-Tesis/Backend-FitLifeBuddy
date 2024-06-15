@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -32,7 +33,9 @@ public class NutriotionistServiceImpl implements INutritionistService {
 
     @Override
     public List<Nutritionist> getAll() throws Exception {
-        return nutritionistRepository.findAll();
+        return nutritionistRepository.findAll().stream()
+                .sorted((n1, n2) -> n1.getIdNutritionist().compareTo(n2.getIdNutritionist()))
+                .collect(Collectors.toList());
     }
 
     @Override

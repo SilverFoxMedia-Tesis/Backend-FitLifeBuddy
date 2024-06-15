@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -34,7 +35,9 @@ public class ExerciseServiceImpl implements IExerciseService {
 
     @Override
     public List<Exercise> getAll() throws Exception {
-        return exerciseRepository.findAll();
+        return exerciseRepository.findAll().stream()
+                .sorted((e1, e2) -> e1.getIdExercise().compareTo(e2.getIdExercise()))
+                .collect(Collectors.toList());
     }
 
     @Override

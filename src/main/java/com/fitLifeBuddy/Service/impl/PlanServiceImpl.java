@@ -19,6 +19,7 @@ import javax.mail.internet.MimeMessage;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -48,7 +49,9 @@ public class PlanServiceImpl implements IPlanService {
 
     @Override
     public List<Plan> getAll() throws Exception {
-        return planRepository.findAll();
+        return planRepository.findAll().stream()
+                .sorted((p1, p2) -> p1.getIdPlan().compareTo(p2.getIdPlan()))
+                .collect(Collectors.toList());
     }
 
     @Override

@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -29,7 +30,9 @@ public class RoutineExerciseServiceImpl implements IRoutineExerciseService {
 
     @Override
     public List<RoutineExercise> getAll() throws Exception {
-        return routineExerciseRepository.findAll();
+        return routineExerciseRepository.findAll().stream()
+                .sorted((re1, re2) -> re1.getIdRoutineExercise().compareTo(re2.getIdRoutineExercise()))
+                .collect(Collectors.toList());
     }
 
     @Override

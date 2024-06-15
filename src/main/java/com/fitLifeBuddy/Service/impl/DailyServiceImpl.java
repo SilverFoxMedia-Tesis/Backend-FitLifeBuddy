@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -35,7 +36,9 @@ public class DailyServiceImpl implements IDailyService {
 
     @Override
     public List<Daily> getAll() throws Exception {
-        return dailyRepository.findAll();
+        return dailyRepository.findAll().stream()
+                .sorted((d1, d2) -> d1.getIdDaily().compareTo(d2.getIdDaily()))
+                .collect(Collectors.toList());
     }
 
     @Override

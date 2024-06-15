@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -32,7 +33,9 @@ public class HealthConditionServiceImpl implements IHealthConditionService {
 
     @Override
     public List<HealthCondition> getAll() throws Exception {
-        return healthConditionRepository.findAll();
+        return healthConditionRepository.findAll().stream()
+                .sorted((hc1, hc2) -> hc1.getIdHealthCondition().compareTo(hc2.getIdHealthCondition()))
+                .collect(Collectors.toList());
     }
 
     @Override

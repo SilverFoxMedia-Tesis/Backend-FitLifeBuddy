@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -30,7 +31,9 @@ public class MealFoodServiceImpl implements IMealFoodService {
 
     @Override
     public List<MealFood> getAll() throws Exception {
-        return mealFoodRepository.findAll();
+        return mealFoodRepository.findAll().stream()
+                .sorted((mf1, mf2) -> mf1.getIdMealFood().compareTo(mf2.getIdMealFood()))
+                .collect(Collectors.toList());
     }
 
     @Override

@@ -35,7 +35,9 @@ public class FoodServiceImpl implements IFoodService {
 
     @Override
     public List<Food> getAll() throws Exception {
-        return foodRepository.findAll();
+        return foodRepository.findAll().stream()
+                .sorted((f1, f2) -> f1.getIdFood().compareTo(f2.getIdFood()))
+                .collect(Collectors.toList());
     }
 
     @Override

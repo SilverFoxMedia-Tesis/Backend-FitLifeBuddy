@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -32,7 +33,9 @@ public class QuestionServiceImpl implements IQuestionService {
 
     @Override
     public List<Question> getAll() throws Exception {
-        return questionRepository.findAll();
+        return questionRepository.findAll().stream()
+                .sorted((q1, q2) -> q1.getIdQuestion().compareTo(q2.getIdQuestion()))
+                .collect(Collectors.toList());
     }
 
     @Override

@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -36,7 +37,9 @@ public class NotificationServiceImpl implements INotificationService {
 
     @Override
     public List<Notification> getAll() throws Exception {
-        return notificationRepository.findAll();
+        return notificationRepository.findAll().stream()
+                .sorted((n1, n2) -> n1.getIdNotification().compareTo(n2.getIdNotification()))
+                .collect(Collectors.toList());
     }
 
     @Override

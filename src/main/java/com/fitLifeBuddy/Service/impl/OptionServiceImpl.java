@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -31,7 +32,9 @@ public class OptionServiceImpl implements IOptionService {
 
     @Override
     public List<Option> getAll() throws Exception {
-        return optionRepository.findAll();
+        return optionRepository.findAll().stream()
+                .sorted((o1, o2) -> o1.getIdOption().compareTo(o2.getIdOption()))
+                .collect(Collectors.toList());
     }
 
     @Override

@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -31,7 +32,9 @@ public class PacientHistoryServiceImpl implements IPacientHistoryService {
 
     @Override
     public List<PacientHistory> getAll() throws Exception {
-        return pacientHistoryRepository.findAll();
+        return pacientHistoryRepository.findAll().stream()
+                .sorted((p1, p2) -> p1.getIdPacientHistory().compareTo(p2.getIdPacientHistory()))
+                .collect(Collectors.toList());
     }
 
     @Override
