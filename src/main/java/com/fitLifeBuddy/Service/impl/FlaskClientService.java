@@ -19,7 +19,7 @@ import java.util.Collections;
 @Service
 public class FlaskClientService {
     private final RestTemplate restTemplate;
-    private final String FLASK_API_URL = "https://275b-8-243-97-226.ngrok-free.app/predict";
+    private final String FLASK_API_URL = "https://cc8b-8-243-97-226.ngrok-free.app/predict";
     private static final Logger logger = LoggerFactory.getLogger(FlaskClientService.class);
 
 
